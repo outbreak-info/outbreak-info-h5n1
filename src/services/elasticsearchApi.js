@@ -121,3 +121,8 @@ export async function getTotalCountOfSamples() {
   const response = await makeRequest("metadata", query);
   return response.hits.total.value;
 }
+
+export async function getAllDemixed() {
+  const query = { size: 10000 };
+  return await makeRequest("demixed", query);
+}
