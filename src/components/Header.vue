@@ -39,15 +39,15 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/mutations"
-                         :class="{ active: $route.path === '/mutations' }">
-              Mutations
+            <router-link class="nav-link" to="/histogram"
+                         :class="{ active: $route.path === '/histogram' }">
+              Histogram
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/prevalence"
-                         :class="{ active: $route.path === '/prevalence' }">
-              Prevalence
+            <router-link class="nav-link" to="/box-plot"
+                         :class="{ active: $route.path === '/box-plot' }">
+              Box Plot
             </router-link>
           </li>
         </ul>
