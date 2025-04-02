@@ -74,3 +74,17 @@ export async function getMutationFrequency(aa, nt = '') {
     return [];
   }
 }
+
+export async function getDMSData(metric = "stability") {
+  try {
+    const data = await makeRequest(`variants/frequency/score?region=HA&metric=${encodeURIComponent(metric)}`);
+    return data.map(item => ({
+      key: item.ref_aa + item.position_aa + item.alt_aa,
+      dms: item.pheno_value,
+      count: item.count
+    }));
+  } catch (error) {
+    console.error('Error fetching DMS data:', error);
+    return [];
+  }
+}
