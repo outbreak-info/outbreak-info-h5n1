@@ -32,7 +32,9 @@
           :width="800"
           xLabel="Frequency Range"
           yLabel="Number of Samples"
-          :bins="[0, 0.01, 0.02, 0.03, 0.04, 0.05]"
+          :xMin="0"
+          :xMax="1"
+          :binCount="10"
         />
       </div>
     </div>
