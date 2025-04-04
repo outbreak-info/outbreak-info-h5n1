@@ -39,16 +39,32 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/histogram"
-                         :class="{ active: $route.path === '/histogram' }">
-              Histogram
-            </router-link>
-          </li>
-          <li class="nav-item">
             <router-link class="nav-link" to="/box-plot"
                          :class="{ active: $route.path === '/box-plot' }">
-              Box Plot
+              Lineage Prevalence
             </router-link>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="mutationDropdown" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false"
+               @mouseover="showDropdown" @mouseleave="hideDropdown">
+              Mutations
+            </a>
+            <ul class="dropdown-menu" :class="{ show: isDropdownVisible }" aria-labelledby="mutationDropdown"
+                @mouseover="showDropdown" @mouseleave="hideDropdown">
+              <li>
+                <router-link class="dropdown-item" to="/histogram"
+                            :class="{ active: $route.path === '/histogram' }">
+                  Frequency Distribution
+                </router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/mutations"
+                            :class="{ active: $route.path === '/mutations' }">
+                  Frequency by Phenotype Score
+                </router-link>
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
@@ -57,7 +73,17 @@
 </template>
 
 <script setup>
-// No additional script needed
+import { ref } from 'vue'
+
+const isDropdownVisible = ref(false)
+
+const showDropdown = () => {
+  isDropdownVisible.value = true
+}
+
+const hideDropdown = () => {
+  isDropdownVisible.value = false
+}
 </script>
 
 <style scoped>
@@ -65,7 +91,6 @@
 .navbar {
   background-color: rgb(44, 62, 80);
   position: relative;
-  overflow: hidden; /* Ensure the SVG doesn't cause scrollbars */
 }
 
 .navbar-brand, .nav-link {
@@ -106,5 +131,41 @@
 /* Override Bootstrap's default navbar colors */
 .bg-primary {
   background-color: rgb(44, 62, 80) !important;
+}
+
+/* Style dropdown menu */
+.dropdown-menu {
+  background-color: rgb(44, 62, 80);
+  margin-top: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: absolute;
+  z-index: 9999; /* Increased z-index */
+  min-width: 250px;
+  top: 100%;
+  left: 0;
+  display: none; /* Hide by default */
+}
+
+.dropdown-menu.show {
+  display: block !important; /* Force display when shown */
+}
+
+.dropdown-item {
+  color: white !important;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Ensure dropdown is above other content */
+.dropdown {
+  position: relative;
 }
 </style>
