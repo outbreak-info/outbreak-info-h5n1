@@ -1,6 +1,6 @@
 <template>
   <div class="isolation-view">
-    <h1>Isolation Source Distribution</h1>
+    <h1>Samples by isolation source</h1>
     <BarChart
       :data="chartData"
       :horizontal="horizontal"

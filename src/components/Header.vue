@@ -24,21 +24,9 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link class="nav-link" to="/"
-                         :class="{ active: $route.path === '/' }">
-              Release Date
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/isolation-source"
-                         :class="{ active: $route.path === '/isolation-source' }">
-              Isolation Source
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/host-source"
-                         :class="{ active: $route.path === '/host-source' }">
-              Host Source
+            <router-link class="nav-link" to="/metadata"
+                         :class="{ active: $route.path === '/metadata' }">
+              Metadata
             </router-link>
           </li>
           <li class="nav-item">

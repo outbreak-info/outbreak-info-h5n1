@@ -1,27 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import IsolationSourceView from '../views/IsolationSourceView.vue'
-import HostSourceView from '../views/HostSourceView.vue'
-import ReleaseDateView from '../views/ReleaseDateView.vue'
 import DMSView from '../views/DMSView.vue'
 import HistogramView from '../views/HistogramView.vue'
 import BoxPlotView from '../views/BoxPlotView.vue'
 import MutationView from '../views/MutationView.vue'
+import MetadataView from "../views/MetadataView.vue";
 
 const routes = [
     {
-        path: '/',
-        name: 'ReleaseDate',
-        component: ReleaseDateView
-    },
-    {
-        path: '/isolation-source',
-        name: 'IsolationSource',
-        component: IsolationSourceView
-    },
-    {
-        path: '/host-source',
-        name: 'HostSource',
-        component: HostSourceView
+        path: '/metadata',
+        name: 'Metadata',
+        component: MetadataView
     },
     {
         path: '/dms',

@@ -1,6 +1,6 @@
 <template>
   <div class="release-date-view">
-    <h1>Samples by Release Date</h1>
+    <h1>Sample release date</h1>
     
     <div v-if="isLoading">Loading data...</div>
     <div v-else-if="error">{{ error }}</div>
@@ -65,7 +65,7 @@ async function loadData() {
 onMounted(loadData);
 </script>
 
-<style scoped>
+<style>
 .release-date-view {
   max-width: 1000px;
   margin: 0 auto;

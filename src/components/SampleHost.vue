@@ -1,6 +1,6 @@
 <template>
   <div class="host-view">
-    <h1>Samples by Host Distribution</h1>
+    <h1>Samples by host</h1>
     <BarChart
       :data="chartData"
       :horizontal="horizontal"
