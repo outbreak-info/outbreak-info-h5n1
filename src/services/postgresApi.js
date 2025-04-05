@@ -100,7 +100,7 @@ export async function getMutationFrequencyByScore(region, metric) {
     return data.map(item => ({
       key: item.ref_aa + item.position_aa + item.alt_aa,
       x: parseFloat(item.pheno_value) || 0,
-      y: parseFloat(item.count) / 239
+      y: parseFloat(item.count)
     }));
   } catch (error) {
     console.error('Error fetching mutation frequency data:', error);
