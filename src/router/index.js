@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HistogramView from '../views/HistogramView.vue'
 import BoxPlotView from '../views/BoxPlotView.vue'
 import MetadataView from "../views/MetadataView.vue";
 import MutationSurveillanceView from "../views/MutationSurveillanceView.vue";
+import SearchView from "../views/SearchView.vue";
 
 const routes = [
     {
@@ -20,9 +20,9 @@ const routes = [
         component: MutationSurveillanceView
     },
     {
-        path: '/histogram',
-        name: 'Histogram',
-        component: HistogramView
+        path: '/search',
+        name: 'Search',
+        component: SearchView
     },
     {
         path: '/box-plot',

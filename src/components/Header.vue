@@ -36,8 +36,8 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/histogram"
-                         :class="{ active: $route.path === '/histogram' }">
+            <router-link class="nav-link" to="/search"
+                         :class="{ active: $route.path === '/search' }">
               Search host-level mutations
             </router-link>
           </li>
