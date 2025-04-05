@@ -25,7 +25,6 @@ import Header from './components/Header.vue';
 }
 
 body {
-  font-family: 'DM Sans', Avenir, Helvetica, Arial, sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
@@ -35,13 +34,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-header {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 1rem;
-  text-align: center;
+  font-family: 'DM Sans', 'Avenir', 'Helvetica', 'Arial', sans-serif;
+  font-weight: 400;
 }
 
 /* Navigation styles removed */
@@ -65,14 +59,5 @@ select, button {
   padding: 0.5rem;
   border-radius: 4px;
   border: 1px solid #ccc;
-}
-
-.dashboard-section {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background-color: var(--section-bg-color);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  border: 1px solid var(--border-color);
 }
 </style>
