@@ -24,15 +24,15 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link class="nav-link" to="/metadata"
-                         :class="{ active: $route.path === '/metadata' }">
-              Metadata
+            <router-link class="nav-link" to="/mutation-surveillance"
+                         :class="{ active: $route.path === '/mutation-surveillance' }">
+              Mutation Surveillance
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/dms"
-                         :class="{ active: $route.path === '/dms' }">
-              DMS
+            <router-link class="nav-link" to="/metadata"
+                         :class="{ active: $route.path === '/metadata' }">
+              Metadata
             </router-link>
           </li>
           <li class="nav-item">
