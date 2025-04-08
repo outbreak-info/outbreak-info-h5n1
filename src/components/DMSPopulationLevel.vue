@@ -6,11 +6,16 @@
         <div class="col mb-3">
           <label for="dmsFieldPopulation" class="form-label">Phenotype</label>
           <select id="dmsFieldPopulation" v-model="selectedMetric" class="form-select">
-            <option value="stability">Stability</option>
-            <option value="ferret_sera_escape">Ferret sera escape</option>
-            <option value="mouse_sera_escape">Mouse sera escape</option>
-            <option value="sa26_usage_increase">SA26 receptor usage increase</option>
-            <option value="entry_in_293t_cells">Entry in 293T cells</option>
+            <optgroup label="Deep mutational scanning">
+              <option value="stability">Stability</option>
+              <option value="ferret_sera_escape">Ferret sera escape</option>
+              <option value="mouse_sera_escape">Mouse sera escape</option>
+              <option value="sa26_usage_increase">SA26 receptor usage increase</option>
+              <option value="entry_in_293t_cells">Entry in 293T cells</option>
+            </optgroup>
+            <optgroup label="Computational prediction">
+              <option value="evescape_sigmoid">EVE</option>
+            </optgroup>
           </select>
         </div>
       
@@ -39,6 +44,7 @@
 </template>
 
 <script setup>
+//TODO: Merge DMSHostLevel and DMSPopulationLevel into one component with different services
 import { ref, onMounted, watch } from 'vue';
 import { ScatterChart, outbreakInfoColorPalette } from 'outbreakInfo';
 import { getMutationFrequencyByScore } from '../services/postgresApi.js';
