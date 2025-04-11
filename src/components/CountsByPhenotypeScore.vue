@@ -51,18 +51,22 @@
     <div class="col col-md-3">
       <label :for="elementIds.hostField" class="form-label">Host</label>
       <select :id="elementIds.hostField" v-model="selectedHost" class="form-select">
-        <option :value="null">All</option>
-        <option v-for="item in hostData" :key="item.key" :value="item">
+        <option :key="null" :value="{key: null, value: null}">All</option>
+        <option v-for="item in hostData" :key="item.key" :value="{ key: item.key, value: item.value }">
           {{ item.key }} ({{ item.value }})
         </option>
       </select>
+      <br />
+
+      <SelectBarChart @bar-selected="hostBarSelected" :selectedBarKey="selectedHost" :horizontal="true" :data="hostData.slice(0, 10)" :marginLeft="75" :height="300" :width="300" fieldName="Host" />
     </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, useId, computed } from 'vue';
-import { ScatterChart, outbreakInfoColorPalette } from 'outbreakInfo';
+import { ScatterChart, outbreakInfoColorPalette, SelectBarChart } from 'outbreakInfo';
 import { getSampleCountByField, getCountByPhenotypeScore } from '../services/postgresApi.js';
 
 const selectedPhenotypeScore = ref('sa26_usage_increase');
@@ -72,7 +76,7 @@ const isLoadingChart = ref(false);
 const error = ref(null);
 const uuid = useId();
 const hostData = ref([]);
-const selectedHost = ref(null);
+const selectedHost = ref({key: null, value: null});
 
 const elementIds = computed(() => ({
   phenotypeField: `dmsField-${uuid}`,
@@ -85,10 +89,14 @@ const props = defineProps({
   title: { type: String, default: "Host-level" }
 })
 
+const hostBarSelected = (item) => {
+  selectedHost.value = item;
+};
+
 async function getCountByPhenotypeScoreFilterByHost(region, phenotypeScore, host, dataField) {
   let q = null;
   if(host !== null){
-    q = `host=${host.key}`
+    q = `host=${host}`
   }
   return getCountByPhenotypeScore(region, phenotypeScore, q, dataField);
 }
@@ -98,7 +106,7 @@ async function loadData() {
   error.value = null;
 
   try {
-    chartData.value = await getCountByPhenotypeScoreFilterByHost("HA", selectedPhenotypeScore.value, selectedHost.value, props.dataField);
+    chartData.value = await getCountByPhenotypeScoreFilterByHost("HA", selectedPhenotypeScore.value, selectedHost.value.key, props.dataField);
     hostData.value = await getSampleCountByField("host");
 
     if (chartData.value.length === 0) {
