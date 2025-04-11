@@ -95,7 +95,7 @@ function transformData(data) {
 async function getLineageCountsFilterByHostAndIsolationSource(host, isolationSource) {
   let q = null;
   if(host !== null && isolationSource !== null){
-    q = `host=${host} AND isolation_source=${isolationSource}`;
+    q = `host=${host} ^ isolation_source=${isolationSource}`;
   } else if (host !== null) {
     q = `host=${host}`;
   } else if(isolationSource !== null){
