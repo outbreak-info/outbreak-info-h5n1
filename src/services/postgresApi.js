@@ -83,10 +83,10 @@ export async function getCountByPhenotypeScore(region, metric, q = null, field =
 }
 
 export async function getLineageCountBySample(q = null)  {
-  if (q === null)
-    return [];
   try {
-    let url = `count/samples/lineages/mutations?q=${q}`;
+    let url = `count/samples/lineages`;
+    if (q !== null)
+      url += `?q=${q}`;
     const data = await makeRequest(url);
 
     return data.map(item => ({
