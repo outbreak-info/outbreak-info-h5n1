@@ -75,35 +75,21 @@ export async function getMutationFrequency(aa, nt = '') {
   }
 }
 
-export async function getVariantFrequencyByScore(region, metric) {
+export async function getCountByPhenotypeScore(region, metric, q = null, field = "variants")  {
   try {
-    const data = await makeRequest(`variants/frequency/score?region=${region}&metric=${metric}`);
+    let url = `${field}/frequency/score?region=${region}&metric=${metric}`;
+    if(q !== null) {
+      url += `&q=${q}`;
+    }
+    const data = await makeRequest(url);
+
     return data.map(item => ({
       key: item.ref_aa + item.position_aa + item.alt_aa,
       phenotypeScore: item.pheno_value,
       count: item.count
     }));
   } catch (error) {
-    console.error('Error fetching variant frequency by score', error);
-    return [];
-  }
-}
-
-export async function getMutationFrequencyByScore(region, metric) {
-  try {
-    const data = await makeRequest(`mutations/frequency/score?region=${region}&metric=${metric}`);
-    
-    if (!Array.isArray(data)) {
-      return [];
-    }
-    
-    return data.map(item => ({
-      key: item.ref_aa + item.position_aa + item.alt_aa,
-      phenotypeScore: parseFloat(item.pheno_value) || 0,
-      count: parseFloat(item.count)
-    }));
-  } catch (error) {
-    console.error('Error fetching mutation frequency by score data:', error);
+    console.error(`Error fetching ${field} count by score`, error);
     return [];
   }
 }
