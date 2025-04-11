@@ -2,18 +2,18 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col-md-6">
-        <DMSHostLevel />
+        <CountsByPhenotypeScore :dataService="getVariantFrequencyByScore" title="Host-level" />
       </div>
       <div class="col-md-6">
-        <DMSPopulationLevel />
+        <CountsByPhenotypeScore :dataService="getMutationFrequencyByScore" title="Population-level" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import DMSHostLevel from "../components/DMSHostLevel.vue";
-import DMSPopulationLevel from "../components/DMSPopulationLevel.vue";
+import CountsByPhenotypeScore from "../components/CountsByPhenotypeScore.vue";
+import {getVariantFrequencyByScore, getMutationFrequencyByScore} from "../services/postgresApi.js";
 </script>
 
 <style scoped>
