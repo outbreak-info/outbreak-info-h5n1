@@ -42,6 +42,28 @@ export async function getSampleReleaseDate() {
 
 export async function getMutationFrequency(aa, nt = '') {
   try {
+    let endpoint = `mutations/frequency?aa=${encodeURIComponent(aa)}`;
+
+    if (nt) {
+      endpoint += `&nt=${encodeURIComponent(nt)}`;
+    }
+
+    const data = await makeRequest(endpoint);
+
+    if (!Array.isArray(data)) {
+      return [];
+    }
+
+    return data.map(item => ({
+      frequency: item.sample_count || 0
+    }));
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getVariantFrequency(aa, nt = '') {
+  try {
     let endpoint = `variants/frequency?aa=${encodeURIComponent(aa)}`;
     
     if (nt) {

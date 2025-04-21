@@ -43,7 +43,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { HistogramChart } from 'outbreakInfo';
-import { getMutationFrequency } from '../services/postgresApi.js';
+import { getVariantFrequency } from '../services/postgresApi.js';
 
 const chartColor = '#2c3e50'; 
 
@@ -61,7 +61,7 @@ async function searchMutation() {
   
   try {
     // Call the Postgres API with amino acid query
-    const results = await getMutationFrequency(aaQuery.value, ntQuery.value);
+    const results = await getVariantFrequency(aaQuery.value, ntQuery.value);
     
     mutationResults.value = results;
     
