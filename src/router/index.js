@@ -4,6 +4,7 @@ import MetadataView from "../views/MetadataView.vue";
 import MutationSurveillanceView from "../views/MutationSurveillanceView.vue";
 import SearchView from "../views/SearchView.vue";
 import LineageSurveillanceView from "../views/LineageSurveillanceView.vue";
+import MonthlyH5N1CasesView from "../views/MonthlyH5N1CasesView.vue";
 
 const routes = [
     {
@@ -34,6 +35,11 @@ const routes = [
         path: '/box-plot',
         name: 'Box Plot',
         component: BoxPlotView
+    },
+    {
+        path: '/monthly-h5n1-cases',
+        name: 'MonthlyH5N1Cases',
+        component: MonthlyH5N1CasesView
     }
 ]
 
