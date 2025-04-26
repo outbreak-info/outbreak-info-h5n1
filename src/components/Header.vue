@@ -51,12 +51,6 @@
               Lineage Prevalence
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/monthly-h5n1-cases"
-                         :class="{ active: $route.path === '/monthly-h5n1-cases' }">
-              Monthly H5N1 Cases
-            </router-link>  
-          </li>
         </ul>
       </div>
     </div>
