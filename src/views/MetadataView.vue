@@ -12,10 +12,13 @@
       </div>
     </div>
 
-    <!-- Second row with one centered div -->
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
+    <!-- Second row with two divs -->
+    <div class="row mt-4">
+      <div class="col-md-6">
         <SampleReleaseDate />
+      </div>
+      <div class="col-md-6">
+        <MonthlyCasesChart />
       </div>
     </div>
   </div>
@@ -25,6 +28,7 @@
 import SampleHost from "../components/SampleHost.vue";
 import SampleIsolationSource from "../components/SampleIsolationSource.vue";
 import SampleReleaseDate from "../components/SampleReleaseDate.vue";
+import MonthlyCasesChart from "../components/MonthlyCasesChart.vue";
 </script>
 
 
