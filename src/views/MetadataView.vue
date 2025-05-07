@@ -33,25 +33,5 @@ import MonthlyCasesChart from "../components/MonthlyCasesChart.vue";
 
 
 <style>
-.chart-container svg text {
-  font-size: 16px; /* Base font size for all text elements */
-}
 
-.chart-container :deep(.tick text) {
-  font-size: 14px; /* Font size for axis tick labels */
-}
-
-.chart-container :deep(.axis-label) {
-  font-size: 18px; /* Font size for axis labels */
-  font-weight: 500;
-}
-
-/* If you need to adjust specific elements */
-.chart-container :deep(.y-axis text) {
-  font-size: 14px; /* Y-axis specific font size */
-}
-
-.chart-container :deep(.x-axis text) {
-  font-size: 14px; /* X-axis specific font size */
-}
 </style>
