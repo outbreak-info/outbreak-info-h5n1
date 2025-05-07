@@ -122,3 +122,16 @@ export async function getLineageCountBySample(q = null)  {
   }
 
 }
+
+export async function getLineageSummaryStatsBySample(q = null)  {
+  try {
+    let url = `lineages/abundances/summary_stats`;
+    if (q !== null)
+      url += `?q=${q}`;
+    return await makeRequest(url);
+  } catch (error) {
+    console.error(`Error fetching lineage summary statistics by sample`, error);
+    return [];
+  }
+
+}
