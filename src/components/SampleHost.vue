@@ -14,7 +14,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { BarChart, outbreakInfoColorPalette } from 'outbreakInfo';
-import { getSampleCountByField } from '../services/postgresApi.js';
+import { getSampleCountByField } from '../services/munninService.js';
 
 const displayLimit = ref(20);
 const horizontal = ref(true);

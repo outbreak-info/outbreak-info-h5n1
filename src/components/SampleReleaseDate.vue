@@ -21,7 +21,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { TimeSeriesChart, outbreakInfoColorPalette } from 'outbreakInfo';
-import { getSampleReleaseDate } from '../services/postgresApi.js';
+import { getSampleReleaseDate } from '../services/munninService.js';
 
 const chartData = ref([]);
 const isLoading = ref(false);

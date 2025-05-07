@@ -43,7 +43,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { HistogramChart } from 'outbreakInfo';
-import { getVariantFrequency } from '../services/postgresApi.js';
+import { getVariantFrequency } from '../services/munninService.js';
 
 const chartColor = '#2c3e50'; 
 

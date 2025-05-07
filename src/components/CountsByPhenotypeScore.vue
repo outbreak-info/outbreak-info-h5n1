@@ -78,7 +78,7 @@
 <script setup>
 import { ref, onMounted, watch, useId, computed } from 'vue';
 import { ScatterChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph } from 'outbreakInfo';
-import { getSampleCountByField, getCountByPhenotypeScore } from '../services/postgresApi.js';
+import { getSampleCountByField, getCountByPhenotypeScore } from '../services/munninService.js';
 
 const selectedPhenotypeScore = ref('sa26_usage_increase');
 const useLogScale = ref(true);
