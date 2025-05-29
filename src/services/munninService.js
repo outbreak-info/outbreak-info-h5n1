@@ -136,7 +136,7 @@ export async function getLineageSummaryStatsBySample(q = null)  {
 
 }
 
-async function getCountByDateBin(field="mutations", q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 366) {
+async function getCountByDateBin(field="mutations", q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 30) {
   const validGroupBy = ['collection_date', 'release_date'];
   const validDateBins = ['month', 'year', 'day'];
   const validChangeBins = ['nt', 'aa'];
@@ -213,7 +213,7 @@ function flattenVariantsOrMutationsDateBins(data) {
   return result.sort((a, b) => a.date - b.date);
 }
 
-export async function getVariantCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 366)  {
+export async function getVariantCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 30)  {
   try {
     const res = await getCountByDateBin("variants",  q, group_by, date_bin, days, change_bin, max_span_days);
     return flattenVariantsOrMutationsDateBins(res);
@@ -223,7 +223,7 @@ export async function getVariantCountByDateBin(q = '', group_by = "collection_da
   }
 }
 
-export async function getMutationCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 366)  {
+export async function getMutationCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 30)  {
   try {
     const res = await getCountByDateBin("mutations",  q, group_by, date_bin, days, change_bin, max_span_days);
     return flattenVariantsOrMutationsDateBins(res);
@@ -233,7 +233,7 @@ export async function getMutationCountByDateBin(q = '', group_by = "collection_d
   }
 }
 
-export async function getLineageCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 366)  {
+export async function getLineageCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 30)  {
   try {
     const res = await getCountByDateBin("lineages",  '', group_by, date_bin, days, change_bin, max_span_days);
     console.log(res);
