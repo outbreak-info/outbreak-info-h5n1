@@ -1,21 +1,23 @@
 <template>
-  <h2 class="my-4">Search by site at host-level</h2>
+  <h2 class="my-4">{{props.title}}</h2>
 
-  <div class="row">
+  <div v-if="props.showSearchBar">
+    <div class="row">
       <div class="search-container">
         <div class="input-group">
-          <input 
-            type="text" 
-            v-model="siteQuery"
-            placeholder="238"
-            class="form-control"
-            @keyup.enter="searchSite"
+          <input
+              type="text"
+              v-model="siteQuery"
+              placeholder="238"
+              class="form-control"
+              @keyup.enter="searchSite"
           />
           <button class="btn btn-primary" @click="searchSite">Submit</button>
         </div>
       </div>
     </div>
-      
+  </div>
+
     <div v-if="isLoading" class="loading-message">
       Loading data...
     </div>
@@ -44,7 +46,26 @@ import {onMounted, ref} from 'vue';
 import { TimeSeriesBarChart } from 'outbreakInfo';
 import { getVariantCountByDateBin } from '../services/munninService.js';
 
-const siteQuery = ref('238');
+const props = defineProps({
+  serviceFunction: {
+    type: Function,
+    default: getVariantCountByDateBin
+  },
+  defaultQuery: {
+    type: String,
+    default: '238'
+  },
+  title: {
+    type: String,
+    default: 'Detection of intrahost variants over time'
+  },
+  showSearchBar: {
+    type: Boolean,
+    default: true
+  }
+});
+
+const siteQuery = ref(props.defaultQuery);
 const isLoading = ref(false);
 const error = ref(null);
 const results = ref([]);
@@ -56,7 +77,7 @@ async function searchSite() {
   error.value = null;
   
   try {
-    results.value = await getVariantCountByDateBin(`position_aa=${siteQuery.value} ^ region=HA`);
+    results.value = await props.serviceFunction(`position_aa=${siteQuery.value} ^ region=HA`);
 
     console.log(results.value);
     
