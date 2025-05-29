@@ -1,5 +1,5 @@
 <template>
-  <h2 class="my-4">Search variants at host-level</h2>
+  <h2 class="my-4">Intrahost variant frequencies</h2>
 
   <div class="row">
       <div class="search-container">

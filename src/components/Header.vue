@@ -42,7 +42,7 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/search"
                          :class="{ active: $route.path === '/search' }">
-              Search host-level mutations
+              Search mutations
             </router-link>
           </li>
           <li class="nav-item">
