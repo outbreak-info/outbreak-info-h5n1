@@ -169,12 +169,12 @@ async function getCountByDateBin(field="mutations", q = '', group_by = "collecti
     return {};
   }
 
-  if (q === '') {
+  if (q === '' && field !== "lineages") {
     console.error(`Invalid q: must include 'position_nt=' or 'position_aa='`);
     return {};
   }
 
-  if (!(q.includes('position_nt=') || q.includes('position_aa='))) {
+  if (field !== "lineages" && (!(q.includes('position_nt=') || q.includes('position_aa=')))) {
     console.error(`Invalid q: must include 'position_nt=' or 'position_aa='`);
     return {};
   }
@@ -188,7 +188,7 @@ async function getCountByDateBin(field="mutations", q = '', group_by = "collecti
     max_span_days: max_span_days.toString()
   });
 
-  if (q) {
+  if (field !== "lineages") {
     params.append('q', q);
   }
 
@@ -197,7 +197,7 @@ async function getCountByDateBin(field="mutations", q = '', group_by = "collecti
   return makeRequest(endpoint);
 }
 
-function flattenDateBins(data) {
+function flattenVariantsOrMutationsDateBins(data) {
   const result = [];
 
   for (const [key, date_data] of Object.entries(data)) {
@@ -216,9 +216,58 @@ function flattenDateBins(data) {
 export async function getVariantCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 366)  {
   try {
     const res = await getCountByDateBin("variants",  q, group_by, date_bin, days, change_bin, max_span_days);
-    return flattenDateBins(res);
+    return flattenVariantsOrMutationsDateBins(res);
   } catch (error) {
     console.error(`Error fetching variant counts by date bin`, error);
+    return [];
+  }
+}
+
+export async function getMutationCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 366)  {
+  try {
+    const res = await getCountByDateBin("mutations",  q, group_by, date_bin, days, change_bin, max_span_days);
+    return flattenVariantsOrMutationsDateBins(res);
+  } catch (error) {
+    console.error(`Error fetching mutation counts by date bin`, error);
+    return [];
+  }
+}
+
+export async function getLineageCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 366)  {
+  try {
+    const res = await getCountByDateBin("lineages",  '', group_by, date_bin, days, change_bin, max_span_days);
+    console.log(res);
+
+    let result = {};
+    Object.entries(res).forEach(([date, lineage_systems]) => {
+      // Iterate through each method for this date
+      Object.entries(lineage_systems).forEach(([lineage_system, lineages]) => {
+        // Initialize method array if it doesn't exist
+        if (!result[lineage_system]) {
+          result[lineage_system] = [];
+        }
+
+        // Iterate through each variant and its count
+        Object.entries(lineages).forEach(([lineage, count]) => {
+          result[lineage_system].push({
+            key: date,
+            value: count,
+            group: lineage
+          });
+        });
+      });
+    });
+
+    if ("usda_genoflu" in result) {
+      return result["usda_genoflu"];
+    }
+
+    // if("freyja_demixed" in result) {
+    //   return result["freyja_demixed"];
+    // }
+    return {};
+  } catch (error) {
+    console.error(`Error fetching lineage counts by date bin`, error);
     return [];
   }
 }
