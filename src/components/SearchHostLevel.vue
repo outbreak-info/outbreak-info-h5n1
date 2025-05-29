@@ -45,7 +45,7 @@ import { ref, onMounted } from 'vue';
 import { HistogramChart } from 'outbreakInfo';
 import { getVariantFrequency } from '../services/munninService.js';
 
-const chartColor = '#2c3e50'; 
+const chartColor = '#2c3e50';
 
 const aaQuery = ref('HA:Q238R');
 const ntQuery = ref('');

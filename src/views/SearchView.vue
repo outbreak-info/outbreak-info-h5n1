@@ -4,12 +4,16 @@
       <div class="col col-md-6">
         <SearchHostLevel />
       </div>
+      <div class="col col-md-6">
+        <VariantsByDateBin />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import SearchHostLevel from "../components/SearchHostLevel.vue";
+import VariantsByDateBin from "../components/VariantsByDateBin.vue";
 </script>
 
 <style scoped>
