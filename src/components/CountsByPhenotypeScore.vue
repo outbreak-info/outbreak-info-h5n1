@@ -128,7 +128,8 @@ async function loadData() {
   error.value = null;
 
   try {
-    chartData.value = await getCountByPhenotypeScoreFilterByHostAndIsolationSource("HA", selectedPhenotypeScore.value, selectedHost.value.key, selectedIsolationSource.value.key, props.dataField);
+    // TODO: Get protein ID from API
+    chartData.value = await getCountByPhenotypeScoreFilterByHostAndIsolationSource("XAJ25415.1", selectedPhenotypeScore.value, selectedHost.value.key, selectedIsolationSource.value.key, props.dataField);
     hostData.value = await getSampleCountByField("host");
     isolationSourceData.value = await getSampleCountByField("isolation_source");
 

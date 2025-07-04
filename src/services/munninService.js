@@ -278,22 +278,21 @@ export async function getLineageMutationIncidence(lineage, change_bin="aa", q = 
   }
   try {
     let url = `v0/lineages/mutationIncidence`;
-    url += `?lineage=${encodeURIComponent(lineage)}&change_bin=${encodeURIComponent(change_bin)}`;
+    url += `?lineage=${encodeURIComponent(lineage)}&change_bin=${encodeURIComponent(change_bin)}&lineage_system_name=usda_genoflu`;
     if(q!==null) {
       url += `&q=${q}`;
     }
-    const data = await makeRequest(url) ;
-
-    const result = {};
-    for (const gene in data["counts"]) {
-      result[gene] = data["counts"][gene].map(d => ({
-        ...d,
-        pos: d.pos.toString(),
-        prev: d.count / data["samples"]
-      })).filter(d => d.prev >= min_prevalence) ;
+    const data = await makeRequest(url);
+    if (data?.mutation_counts) {
+      for (const gff_or_region in data.mutation_counts) {
+        data.mutation_counts[gff_or_region] = data.mutation_counts[gff_or_region].map(obj => ({
+          ...obj,
+          lineage: lineage,
+          mut: obj.ref + obj.pos + obj.alt
+        })).sort((a,b) => a.pos - b.pos);
+      }
     }
-
-    return result;
+    return data;
   } catch (error) {
     console.error(`Error fetching lineage count by sample`, error);
     return [];
