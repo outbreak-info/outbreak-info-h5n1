@@ -293,7 +293,7 @@ export async function getLineageMutationIncidence(lineage, lineage_system_name, 
       url += `&q=${q}`;
     }
     const data = await makeRequest(url);
-    if (data?.mutation_counts) {
+    if (data.mutation_counts) {
       for (const gff_or_region in data.mutation_counts) {
         data.mutation_counts[gff_or_region] = data.mutation_counts[gff_or_region].map(obj => ({
           ...obj,
@@ -309,4 +309,23 @@ export async function getLineageMutationIncidence(lineage, lineage_system_name, 
     return [];
   }
 
+}
+
+export async function getVariantMutationLag(lineage, lineage_system_name) {
+  try {
+    const data =  await makeRequest(`variants:mutationLag?lineage=${lineage}&lineage_system_name=${lineage_system_name}`);
+
+    for (const gff_or_region in data) {
+      data[gff_or_region] = data[gff_or_region].map(obj => ({
+        ...obj,
+        variants_start_date: new Date(obj.variants_start_date),
+        mutations_start_date: new Date(obj.mutations_start_date),
+        lineage: lineage,
+        mut: obj.ref + obj.pos + obj.alt,
+      })).sort((a,b) => b.lag - a.lag);
+    }
+    return data;
+  } catch (error) {
+    console.error(`Error fetching variant mutation lag`, error);
+  }
 }
