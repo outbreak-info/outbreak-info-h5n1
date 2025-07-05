@@ -104,6 +104,16 @@ export async function getCountByPhenotypeScore(region, metric, q = null, field =
   }
 }
 
+export async function getLineagesByLineageSystem(lineage_system_name)  {
+  try {
+    let url = `lineages?lineage_system_name=${lineage_system_name}`;
+    return await makeRequest(url);
+  } catch (error) {
+    console.error(`Error fetching lineages count by lineage system name`, error);
+    return [];
+  }
+}
+
 export async function getLineageCountBySample(q = null)  {
   try {
     let url = `count/samples/lineages`;
@@ -272,13 +282,13 @@ export async function getLineageCountByDateBin(q = '', group_by = "collection_da
   }
 }
 
-export async function getLineageMutationIncidence(lineage, change_bin="aa", q = null, min_prevalence=0.75)  {
+export async function getLineageMutationIncidence(lineage, lineage_system_name, change_bin="aa", q = null, min_prevalence=0.75)  {
   if(lineage === null) {
     return [];
   }
   try {
     let url = `v0/lineages/mutationIncidence`;
-    url += `?lineage=${encodeURIComponent(lineage)}&change_bin=${encodeURIComponent(change_bin)}&lineage_system_name=usda_genoflu`;
+    url += `?lineage=${encodeURIComponent(lineage)}&change_bin=${encodeURIComponent(change_bin)}&lineage_system_name=${lineage_system_name}`;
     if(q!==null) {
       url += `&q=${q}`;
     }
@@ -288,7 +298,8 @@ export async function getLineageMutationIncidence(lineage, change_bin="aa", q = 
         data.mutation_counts[gff_or_region] = data.mutation_counts[gff_or_region].map(obj => ({
           ...obj,
           lineage: lineage,
-          mut: obj.ref + obj.pos + obj.alt
+          mut: obj.ref + obj.pos + obj.alt,
+          total_samples: data.sample_count
         })).sort((a,b) => a.pos - b.pos);
       }
     }
