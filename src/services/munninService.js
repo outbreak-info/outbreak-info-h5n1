@@ -381,3 +381,43 @@ export async function getLineageMutationProfile(lineage, lineage_system_name, q 
     return {};
   }
 }
+
+export async function getPhenotypeMetricCountsForMutationsByCollectionDate(phenotype_metric_name,
+                                                               phenotype_metric_value_threshold,
+                                                               q = null,
+                                                               date_bin= "month",
+                                                               max_span_days = 31,
+                                                               ) {
+  try {
+    let url = `v0/phenotype_metric_values:countMutationsByCollectionDate?phenotype_metric_name=${encodeURIComponent(phenotype_metric_name)}`
+    url += `&phenotype_metric_value_threshold=${encodeURIComponent(phenotype_metric_value_threshold)}`;
+    url += `&date_bin=${encodeURIComponent(date_bin)}`;
+    url += `&max_span_days=${encodeURIComponent(max_span_days)}`;
+    if(q !== null)
+      url += `&q=${encodeURIComponent(q)}`;
+    return await makeRequest(url);
+  } catch (error) {
+    console.error(`Error fetching phenotype metrics by collection date`, error);
+    return {};
+  }
+}
+
+export async function getPhenotypeMetricCountsForVariantsByCollectionDate(phenotype_metric_name,
+                                                                           phenotype_metric_value_threshold,
+                                                                           q = null,
+                                                                           date_bin= "month",
+                                                                           max_span_days = 31,
+) {
+  try {
+    let url = `v0/phenotype_metric_values:countVariantsByCollectionDate?phenotype_metric_name=${encodeURIComponent(phenotype_metric_name)}`
+    url += `&phenotype_metric_value_threshold=${encodeURIComponent(phenotype_metric_value_threshold)}`;
+    url += `&date_bin=${encodeURIComponent(date_bin)}`;
+    url += `&max_span_days=${encodeURIComponent(max_span_days)}`;
+    if(q !== null)
+      url += `&q=${encodeURIComponent(q)}`;
+    return await makeRequest(url);
+  } catch (error) {
+    console.error(`Error fetching phenotype metrics by collection date`, error);
+    return {};
+  }
+}
