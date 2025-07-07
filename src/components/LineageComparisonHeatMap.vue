@@ -1,14 +1,8 @@
 <template>
   <div class="host-view">
     <h1>Compare mutations across lineages</h1>
-    <div>
-      <MultiSelectComponent
-          :options="allLineages"
-          label="Select Lineages"
-          :showButton="true"
-          @buttonClick="getLineageMutations"
-      />
-    </div>
+
+    <LineageMultiSelect @lineagesSelectedButtonClick="getAllLineageMutationIncidence" />
 
     <div v-if="isLoading" class="loading">Loading data...</div>
     <div class="container-fluid">
@@ -46,25 +40,19 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { HeatMapChart, MultiSelectComponent } from 'outbreakInfo';
+import { HeatMapChart } from 'outbreakInfo';
 import {
   getLineageMutationIncidence,
-  getLineagesByLineageSystem,
-  getRegionToGffFeatureMapping, getRegionToGffFeatureMappingForMutations
+  getRegionToGffFeatureMappingForMutations
 } from '../services/munninService.js';
+import LineageMultiSelect from "./LineageMultiSelect.vue";
 
 const chartData = ref([]);
 const isLoading = ref(false);
-const allLineages = ref([]);
 const gffFeatureToRegion = ref({})
 
-async function getAllLineages(lineage_system_name){
-  const resp = await getLineagesByLineageSystem(lineage_system_name);
-  return resp.map(lineage => ({
-    label: lineage.lineage_name,
-    value: lineage.lineage_name,
-    ...lineage
-  }));
+async function loadData() {
+  gffFeatureToRegion.value = await getRegionToGffFeatureMappingForMutations();
 }
 
 function mergeMutationCounts(lineage_mutations) {
@@ -79,12 +67,7 @@ function mergeMutationCounts(lineage_mutations) {
   return mutation_counts;
 }
 
-async function loadData() {
-  allLineages.value = await getAllLineages("usda_genoflu");
-  gffFeatureToRegion.value = await getRegionToGffFeatureMappingForMutations();
-}
-
-async function getLineageMutations(selectedLineages) {
+async function getAllLineageMutationIncidence(selectedLineages){
   isLoading.value = true;
   let res = await Promise.all(selectedLineages.map(lineage => getLineageMutationIncidence(lineage.lineage_name, lineage.lineage_system_name)));
   isLoading.value = false;

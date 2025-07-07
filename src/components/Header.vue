@@ -52,9 +52,9 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/box-plot"
-                         :class="{ active: $route.path === '/box-plot' }">
-              Lineage Prevalence
+            <router-link class="nav-link" to="/integrated-surveillance"
+                         :class="{ active: $route.path === '/integrated-surveillance' }">
+              Integrated surveillance
             </router-link>
           </li>
         </ul>
