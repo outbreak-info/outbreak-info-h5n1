@@ -1,12 +1,18 @@
 <template>
   <div class="row">
     <div class="col col-md-6">
+      <CountsByDateBin :serviceFunction="getLineageCountByDateBin" title="Detection of lineages over time" :showSearchBar="false"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-md-6">
       <div v-if="isLoadingChart" class="loading">
         <LoadingSpinner />
       </div>
       <div v-else-if="error" class="error">{{ error }}</div>
       <div v-for="(value, key) in transformedData" :key="key">
         <h4>{{ lineageSystemLabels[key] }}</h4>
+        <hr>
         <BarChart
             :data="value"
             :horizontal="false"
@@ -61,7 +67,13 @@
 <script setup>
 import {ref, onMounted, watch} from 'vue';
 import { BarChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph, PointRangeChart, LoadingSpinner } from 'outbreakInfo';
-import { getLineageCountBySample, getLineageSummaryStatsBySample, getSampleCountByField } from '../services/munninService.js';
+import {
+  getLineageCountByDateBin,
+  getLineageCountBySample,
+  getLineageSummaryStatsBySample,
+  getSampleCountByField
+} from '../services/munninService.js';
+import CountsByDateBin from "./CountsByDateBin.vue";
 
 const transformedData = ref({});
 const transformedStats = ref({});

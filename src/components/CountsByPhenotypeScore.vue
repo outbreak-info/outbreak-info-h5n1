@@ -60,7 +60,7 @@
           @item-selected="hostBarSelected"
           :width="330"
           :height="310"
-          :marginLeft="60" />
+          :marginLeft="60"/>
     </div>
 
     <div class="col col-md-3">

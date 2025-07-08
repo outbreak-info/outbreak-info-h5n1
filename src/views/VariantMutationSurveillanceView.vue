@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-3">
     <div class="row">
-      <h2>Host- and population-level surveillance</h2>
+      <h2>First detection of mutation at host- and population-level</h2>
       <hr>
       <VariantMutationLag />
     </div>

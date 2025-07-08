@@ -24,6 +24,23 @@
           :marginBottom="70"
           :marginLeft="100"
           xLabel="Time"
+          yLabel="Proportion of samples"
+          :rangeColor="outbreakInfoColorPalette.slice(4,20)"
+      />
+      <TimeSeriesBarChart
+          :data="chartDataCounts"
+          :height="150"
+          :width="1200"
+          dateKey="key"
+          groupKey="group"
+          binInterval="month"
+          :isPreBinned="true"
+          tickInterval="3 month"
+          :marginBottom="70"
+          :marginLeft="100"
+          xLabel="Time"
+          yLabel="Count"
+          :rangeColor="outbreakInfoColorPalette.slice(4,20)"
       />
       </div>
   </div>
@@ -31,7 +48,7 @@
 
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import { TimeSeriesBarChart, TextInput, LoadingSpinner, Divider } from 'outbreakInfo';
+import { TimeSeriesBarChart, TextInput, LoadingSpinner, Divider, outbreakInfoColorPalette } from 'outbreakInfo';
 import {
   getPhenotypeMetricCountsForMutationsByCollectionDate,
   getPhenotypeMetricCountsForVariantsByCollectionDate, getPhenotypeMetricValueByMutationsQuantile,
@@ -39,6 +56,7 @@ import {
 } from "../services/munninService.js";
 
 const chartData = ref([])
+const chartDataCounts =ref([])
 const isLoading = ref(false);
 const phenotypeMetricValueThreshold = ref({phenotype_metric_value: null, quantile:0.5});
 
@@ -49,10 +67,10 @@ const props = defineProps({
   selectedIsolationSource: { type: Object, default: null }
 })
 
-function ungroupData(data) {
+function ungroupData(data, proportion = false) {
   return data.flatMap(({ date, n_gte, n }) => [
-    { key: date, value: n_gte,       group: props.selectedPhenotypeScore + ' >= ' + phenotypeMetricValueThreshold.value.phenotype_metric_value },
-    { key: date, value: n - n_gte,   group: props.selectedPhenotypeScore + ' < ' +  phenotypeMetricValueThreshold.value.phenotype_metric_value  }
+    { key: date, value: (proportion ? n_gte/n : n_gte) ,       group: props.selectedPhenotypeScore + ' >= ' + phenotypeMetricValueThreshold.value.phenotype_metric_value },
+    { key: date, value: (proportion ? (n - n_gte)/n : n - n_gte),   group: props.selectedPhenotypeScore + ' < ' +  phenotypeMetricValueThreshold.value.phenotype_metric_value  }
   ]);
 }
 
@@ -90,7 +108,8 @@ async function loadData() {
         props.selectedPhenotypeScore,
         q);
     isLoading.value = false;
-    chartData.value = ungroupData(data);
+    chartData.value = ungroupData(data, true);
+    chartDataCounts.value = ungroupData(data);
   }
 }
 

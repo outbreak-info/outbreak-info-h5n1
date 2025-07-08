@@ -40,9 +40,9 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/metadata"
-                         :class="{ active: $route.path === '/metadata' }">
-              Metadata
+            <router-link class="nav-link" to="/integrated-surveillance"
+                         :class="{ active: $route.path === '/integrated-surveillance' }">
+              Integrated surveillance
             </router-link>
           </li>
           <li class="nav-item">
@@ -52,9 +52,9 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/integrated-surveillance"
-                         :class="{ active: $route.path === '/integrated-surveillance' }">
-              Integrated surveillance
+            <router-link class="nav-link" to="/metadata"
+                         :class="{ active: $route.path === '/metadata' }">
+              Metadata
             </router-link>
           </li>
         </ul>

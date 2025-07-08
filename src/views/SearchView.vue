@@ -16,9 +16,6 @@
       <div class="col col-md-6">
         <CountsByDateBin :serviceFunction="getMutationCountByDateBin" title="Detection of mutations over time" defaultQuery="HA:172" />
       </div>
-      <div class="col col-md-6">
-        <CountsByDateBin :serviceFunction="getLineageCountByDateBin" title="Detection of lineages over time" :showSearchBar="false"/>
-      </div>
     </div>
   </div>
 </template>

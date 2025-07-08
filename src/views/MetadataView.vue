@@ -17,9 +17,6 @@
       <div class="col-md-6">
         <SampleReleaseDate />
       </div>
-      <div class="col-md-6">
-        <MonthlyCasesChart />
-      </div>
     </div>
   </div>
 </template>

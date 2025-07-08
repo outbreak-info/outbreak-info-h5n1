@@ -7,7 +7,7 @@
     </div>
     <div v-else-if="error">{{ error }}</div>
     
-    <TimeSeriesChart
+    <TimeSeriesBarChart
       v-else
       :data="chartData"
       :dateKey="'key'"
@@ -15,6 +15,8 @@
       :height="500"
       xLabel="Release Date"
       yLabel="Count"
+      binInterval="month"
+      tickInterval="3 month"
       :lineColor="outbreakInfoColorPalette[3]"
     />
   </div>
@@ -22,7 +24,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { TimeSeriesChart, outbreakInfoColorPalette, LoadingSpinner } from 'outbreakInfo';
+import { TimeSeriesBarChart, outbreakInfoColorPalette, LoadingSpinner } from 'outbreakInfo';
 import { getSampleReleaseDate } from '../services/munninService.js';
 
 const chartData = ref([]);
