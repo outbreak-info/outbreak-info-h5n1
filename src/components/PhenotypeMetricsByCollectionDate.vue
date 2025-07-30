@@ -1,6 +1,9 @@
 <template>
   <div class="host-view">
-    <Divider text="Phenotype over time" title-placement="left" />
+    <h5>Phenotype over time</h5>
+    <InfoComponent :embedded="true">
+      <span v-html="helpText.mutationSurveillance.phenotypeByCollectionDate"></span>
+    </InfoComponent>
     <div v-if="isLoading">
       <LoadingSpinner />
     </div>
@@ -48,12 +51,13 @@
 
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import { TimeSeriesBarChart, TextInput, LoadingSpinner, Divider, outbreakInfoColorPalette } from 'outbreakInfo';
+import { TimeSeriesBarChart, TextInput, LoadingSpinner, InfoComponent, outbreakInfoColorPalette } from 'outbreakInfo';
 import {
   getPhenotypeMetricCountsForMutationsByCollectionDate,
   getPhenotypeMetricCountsForVariantsByCollectionDate, getPhenotypeMetricValueByMutationsQuantile,
   getPhenotypeMetricValueByVariantsQuantile
 } from "../services/munninService.js";
+import helpText from "../helpInfo/helpInfoText.json";
 
 const chartData = ref([])
 const chartDataCounts =ref([])

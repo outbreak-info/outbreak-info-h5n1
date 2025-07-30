@@ -1,0 +1,10 @@
+{
+  "mutationSurveillance": {
+    "hostLevel": "Mutations at the host-level are also called <b>intrahost variants</b>. These are mutations that occur at a given frequency (0 - 1) within a given sample.",
+    "populationLevel": "Mutations at the population-level are those identified in the consensus genomes.",
+    "phenotype": "To assess the importance of mutations found at the host- or population-level, we use phenotypic measurements such as deep mutational scanning (<a target=\"_blank\" href=\"https://doi.org/10.1371/journal.pbio.3002916\">Dadonaite et al. 2024</a>). In the plot below, we show the number of samples a mutation was identified in and the corresponding phenotypic measurement. You can find more details about deep mutational scanning data on <a target=\"_blank\" href=\"https://dms-vep.org/Flu_H5_American-Wigeon_South-Carolina_2021-H5N1_DMS/\">DMS VEP</a>.",
+    "phenotypeByCollectionDate": "If there is evolutionary pressure to select for a given phenotype, we would expect the proportion of distinct mutations with a measurement over a threshold to increase over time.",
+    "phenotypeAggregateBySample": "We aggregate phenotypic measurements for every sample by summing over all the sites in the genome.",
+    "literatureAnnotationsOverTime": "We rely on <a target=\"_blank\" href=\"https://izsvenezie-virology.github.io/FluMut/\">FluMut</a>, a resource for annotations of mutations in influenza from scientific literature, to highlight the number of mutations with a given annotation over time."
+  }
+}

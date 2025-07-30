@@ -1,5 +1,8 @@
 <template>
-  <Divider text="Literature annotations over time" title-placement="left" />
+  <h5>Literature annotations over time</h5>
+  <InfoComponent :embedded="true">
+    <span v-html="helpText.mutationSurveillance.literatureAnnotationsOverTime"></span>
+  </InfoComponent>
   <MultiSelectComponent
       :multiple="false"
       :options="allAnnotationEffects"
@@ -33,8 +36,9 @@
 
 <script setup>
 import {ref, onMounted } from 'vue';
-import { MultiSelectComponent, Divider, TimeSeriesBarChart, LoadingSpinner, outbreakInfoColorPalette } from 'outbreakInfo';
+import { MultiSelectComponent, InfoComponent, TimeSeriesBarChart, LoadingSpinner, outbreakInfoColorPalette } from 'outbreakInfo';
 import { getAnnotationsByVariantsAndCollectionDate, getAnnotationsByMutationsAndCollectionDate, getAllAnnotationEffects } from '../services/munninService.js';
+import helpText from "../helpInfo/helpInfoText.json";
 
 const chartData = ref([]);
 const allAnnotationEffects = ref([]);

@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col mb-3">
       <InfoComponent :embedded="true">
-        <p class="d-inline">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <span class="d-inline" v-html="(dataField==='variants') ? helpText.mutationSurveillance.hostLevel : helpText.mutationSurveillance.populationLevel"></span>
       </InfoComponent>
     </div>
   </div>
@@ -13,6 +13,9 @@
     <div class="row">
       <div class="col col-12">
         <h5>Select a phenotype</h5>
+        <InfoComponent :embedded="true">
+          <span v-html="helpText.mutationSurveillance.phenotype"></span>
+        </InfoComponent>
         <PhenotypicMetricNamesMultiSelect class="inline" @update:modelValue="updatedPhenotypeScore" />
       </div>
       <div class="col mb-3">
@@ -101,6 +104,7 @@ import PhenotypeMetricsByCollectionDate from './PhenotypeMetricsByCollectionDate
 import AnnotationsByCollectionDate from "./AnnotationsByCollectionDate.vue";
 import AggregatePhenotypeMetricsBySampleAndCollectionDate from "./AggregatePhenotypeMetricsBySampleAndCollectionDate.vue";
 import PhenotypicMetricNamesMultiSelect from "./PhenotypicMetricNamesMultiSelect.vue";
+import helpText from '../helpInfo/helpInfoText.json';
 
 const selectedPhenotypeScore = ref('');
 const useLogScale = ref(true);

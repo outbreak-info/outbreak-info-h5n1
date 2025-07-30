@@ -1,6 +1,9 @@
 <template>
   <div class="host-view">
-    <Divider text="Phenotype aggregate by sample" title-placement="left" />
+    <h5>Phenotype aggregate by sample</h5>
+    <InfoComponent :embedded="true">
+      <span v-html="helpText.mutationSurveillance.phenotypeAggregateBySample"></span>
+    </InfoComponent>
     <div v-if="isLoading">
       <LoadingSpinner />
     </div>
@@ -28,11 +31,12 @@
 
 <script setup>
 import {onMounted, ref, watch} from 'vue';
-import { TimeSeriesPointRangeChart, LoadingSpinner, Divider, outbreakInfoColorPalette } from 'outbreakInfo';
+import { TimeSeriesPointRangeChart, LoadingSpinner, InfoComponent, outbreakInfoColorPalette } from 'outbreakInfo';
 import {
   getAggregatePhenotypeMetricValuesForVariantsBySampleAndCollectionDate,
   getAggregatePhenotypeMetricValuesForMutationsBySampleAndCollectionDate,
 } from "../services/munninService.js";
+import helpText from "../helpInfo/helpInfoText.json";
 
 const chartData = ref([])
 const isLoading = ref(false);
