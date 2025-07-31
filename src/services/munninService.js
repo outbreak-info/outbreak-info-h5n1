@@ -49,6 +49,14 @@ export async function getSampleReleaseDate() {
   }
 }
 
+export async function getSampleCollectionReleaseLag() {
+  try {
+   return await makeRequest("samples:collectionReleaseLag");
+  } catch (error) {
+    return[];
+  }
+}
+
 export async function getMutationFrequency(aa, nt = '') {
   try {
     let endpoint = `mutations/frequency?aa=${encodeURIComponent(aa)}`;
