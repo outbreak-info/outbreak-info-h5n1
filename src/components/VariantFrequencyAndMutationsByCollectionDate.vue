@@ -47,7 +47,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { TimeSeriesPointRangeChart, TimeSeriesBarChart, LoadingSpinner } from 'outbreakInfo';
-import { getVariantFrequencyByCollectionDate, getMutationCountsByCollectionDate } from '../services/munninService.js';
+import { getVariantFrequencyByCollectionDate, getMutationCountsByCollectionDateAndLineage } from '../services/munninService.js';
 
 const isLoading = ref(false);
 const error = ref(null);
@@ -70,7 +70,7 @@ async function loadChart() {
   try {
     // TODO: Add input for mutation
     const tmpVariantFrequencyOverTime = await getVariantFrequencyByCollectionDate("627", "K", "XAJ25426.1");
-    const tmpMutationCountOverTime = await getMutationCountsByCollectionDate("627", "K", "XAJ25426.1");
+    const tmpMutationCountOverTime = await getMutationCountsByCollectionDateAndLineage("627", "K", "XAJ25426.1");
     xTicksMinMax.value = getMinAndMaxDate(tmpVariantFrequencyOverTime.map(d => d.date), tmpMutationCountOverTime.map(d => d.date));
     variantFrequencyOverTime.value = tmpVariantFrequencyOverTime;
     mutationCountOverTime.value = tmpMutationCountOverTime;

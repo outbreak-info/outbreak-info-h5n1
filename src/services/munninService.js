@@ -207,9 +207,8 @@ async function getCountByDateBin(field="mutations", q = '', group_by = "collecti
     max_span_days: max_span_days.toString()
   });
 
-  if (field !== "lineages") {
+  if (q !== null && q !== '')
     params.append('q', q);
-  }
 
   const endpoint = `v0/${field}:count?${params.toString()}`;
 
@@ -254,8 +253,7 @@ export async function getMutationCountByDateBin(q = '', group_by = "collection_d
 
 export async function getLineageCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 30)  {
   try {
-    const res = await getCountByDateBin("lineages",  '', group_by, date_bin, days, change_bin, max_span_days);
-    console.log(res);
+    const res = await getCountByDateBin("lineages",  q, group_by, date_bin, days, change_bin, max_span_days);
 
     let result = {};
     Object.entries(res).forEach(([date, lineage_systems]) => {
@@ -512,12 +510,12 @@ export async function getVariantFrequencyByCollectionDate(position_aa = "", alt_
 }
 
 
-export async function getMutationCountsByCollectionDate(position_aa = "", alt_aa = "", gff_feature="", q = null, date_bin= "month", max_span_days = 31) {
+export async function getMutationCountsByCollectionDateAndLineage(position_aa = "", alt_aa = "", gff_feature="", q = null, date_bin= "month", max_span_days = 31) {
   if(position_aa === "" || alt_aa === "" || gff_feature === "") {
     return [];
   }
   try {
-    let url = `v0/mutations:countByCollectionDate?alt_aa=${encodeURIComponent(alt_aa)}&position_aa=${encodeURIComponent(position_aa)}&gff_feature=${encodeURIComponent(gff_feature)}`
+    let url = `v0/mutations:countByCollectionDateAndLineage?alt_aa=${encodeURIComponent(alt_aa)}&position_aa=${encodeURIComponent(position_aa)}&gff_feature=${encodeURIComponent(gff_feature)}`
     url += `&date_bin=${encodeURIComponent(date_bin)}`;
     url += `&max_span_days=${encodeURIComponent(max_span_days)}`;
     if(q !== "" && q!== null)
