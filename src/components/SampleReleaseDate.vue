@@ -1,7 +1,5 @@
 <template>
   <div class="release-date-view">
-    <h1>Sample release date</h1>
-    
     <div v-if="isLoading">
       <LoadingSpinner />
     </div>

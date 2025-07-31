@@ -1,20 +1,22 @@
 <template>
   <div class="host-view">
     <h5>Phenotype over time</h5>
+    <TextInput
+        label="Select a phenotype above and enter a threshold for phenotype value"
+        placeholder="Enter threshold for phenotype value"
+        buttonText="Submit"
+        :modelValue="phenotypeMetricValueThreshold.phenotype_metric_value"
+        @submit="handleSubmit"
+        class="mb-3"
+    />
     <InfoComponent :embedded="true">
       <span v-html="helpText.mutationSurveillance.phenotypeByCollectionDate"></span>
     </InfoComponent>
     <div v-if="isLoading">
       <LoadingSpinner />
     </div>
-
     <div v-else-if="chartData.length > 0" class="chart-wrapper mt-3">
-      <TextInput
-          placeholder="Enter threshold for phenotype value"
-          buttonText="Submit"
-          :modelValue="phenotypeMetricValueThreshold.phenotype_metric_value"
-          @submit="handleSubmit"
-      />
+
       <TimeSeriesBarChart
           :data="chartData"
           :height="300"
@@ -24,8 +26,9 @@
           binInterval="month"
           :isPreBinned="true"
           tickInterval="3 month"
-          :marginBottom="70"
+          :marginBottom="50"
           :marginLeft="100"
+          :marginTop="40"
           xLabel="Time"
           yLabel="Proportion of unique mutations"
           :rangeColor="outbreakInfoColorPalette.slice(4,20)"
@@ -39,8 +42,9 @@
           binInterval="month"
           :isPreBinned="true"
           tickInterval="3 month"
-          :marginBottom="70"
+          :marginBottom="50"
           :marginLeft="100"
+          :marginTop="40"
           xLabel="Time"
           yLabel="Count"
           :rangeColor="outbreakInfoColorPalette.slice(4,20)"
@@ -122,7 +126,7 @@ async function handleSubmit(value) {
   loadData();
 }
 
-onMounted(loadData);
+// onMounted(loadData);
 watch(() => props.selectedPhenotypeScore, () => {
   phenotypeMetricValueThreshold.value.phenotype_metric_value = null;
   loadData();

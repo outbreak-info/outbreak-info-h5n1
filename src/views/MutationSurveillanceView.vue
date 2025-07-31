@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-3">
-    <h2>Functional surveillance of mutations <HelpTooltip text="We integrate phenotypic measurements with genomic data to assess the functional impact of mutations at host- and population-level" placement="right-start" /></h2>
+    <h2>Functional surveillance of mutations</h2>
     <div class="row">
       <div class="col-md-12">
         <TabsWrapper :tabs="countsByPhenotypeTabs" size="large">
