@@ -26,7 +26,6 @@ const gffFeatures = ref([]);
 
 async function getAllGffFeatures(){
   const resp = await props.serviceFunction();
-  console.log(resp);
   return Object.keys(resp).map(aaId => ({
     label: resp[aaId] + " (" + aaId + ")",
     value: aaId

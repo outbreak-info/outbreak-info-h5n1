@@ -33,19 +33,19 @@ import LineageMultiSelect from "./LineageMultiSelect.vue";
 import { TextInput, ButtonComponent } from 'outbreakInfo';
 import {ref} from "vue";
 import GffFeatureMultiSelect from "./GffFeatureMultiSelect.vue";
-import {getVariantCountByDateBin} from "../services/munninService";
+import {getRegionToGffFeatureMappingForVariants} from "../services/munninService";
 
 const props = defineProps({
   serviceFunction: {
     type: Function,
-    default: getVariantCountByDateBin
+    default: getRegionToGffFeatureMappingForVariants
   },
 });
 
-const selectedAltAA = ref("");
-const selectedSite = ref("");
-const selectedLineage = ref("");
-const selectedGffFeature = ref("");
+const selectedAltAA = ref(null);
+const selectedSite = ref(null);
+const selectedLineage = ref(null);
+const selectedGffFeature = ref(null);
 const emit = defineEmits(['selectSite']);
 
 // TODO: Pass model value to underlying components and remove updateSelectedLineage and updatedSelectedGffFeature.
