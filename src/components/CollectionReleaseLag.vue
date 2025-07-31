@@ -1,5 +1,4 @@
 <template>
-  <h5>Lag between release and collection date</h5>
   <TimeSeriesPointRangeChart
       :data="chartData"
       :isPreBinned="true"
