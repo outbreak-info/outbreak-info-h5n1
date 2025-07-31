@@ -1,22 +1,7 @@
 <template>
   <h2 class="my-4">{{props.title}}</h2>
 
-  <div v-if="props.showSearchBar">
-    <div class="row">
-      <div class="search-container">
-        <div class="input-group">
-          <input
-              type="text"
-              v-model="siteQuery"
-              placeholder="HA:238"
-              class="form-control"
-              @keyup.enter="searchSite"
-          />
-          <button class="btn btn-primary" @click="searchSite">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
+ <SelectLineageAndProteinAndAltAA @selectSite="searchSite" :serviceFunction="gffFeatureToRegionMappingFunction" />
 
     <div v-if="isLoading" class="loading-message">
       <LoadingSpinner />
@@ -42,18 +27,19 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import { ref} from 'vue';
 import { TimeSeriesBarChart, LoadingSpinner } from 'outbreakInfo';
-import { getVariantCountByDateBin } from '../services/munninService.js';
+import {getRegionToGffFeatureMappingForVariants, getVariantCountByDateBin} from '../services/munninService.js';
+import SelectLineageAndProteinAndAltAA from './SelectLineageAndProteinAndAltAA.vue';
 
 const props = defineProps({
   serviceFunction: {
     type: Function,
     default: getVariantCountByDateBin
   },
-  defaultQuery: {
-    type: String,
-    default: 'HA:238'
+  gffFeatureToRegionMappingFunction: {
+    type: Function,
+    default: getRegionToGffFeatureMappingForVariants
   },
   title: {
     type: String,
@@ -65,30 +51,26 @@ const props = defineProps({
   }
 });
 
-const siteQuery = ref(props.defaultQuery);
 const isLoading = ref(false);
 const error = ref(null);
 const results = ref([]);
 
-async function searchSite() {
-  if (!siteQuery.value.trim()) return;
-  
+async function searchSite(selectedSite) {
   isLoading.value = true;
   error.value = null;
-  const parts = siteQuery.value.split(":");
 
-  if (parts.length !== 2) {
-    console.log("Specify site based on <region>:<position>");
-    results.value = [];
-  }
-
-  const [region, positionAA] = parts;
+  console.log(selectedSite);
 
   try {
-    results.value = await props.serviceFunction(`position_aa=${positionAA} ^ region=${region}`);
+    let q = `position_aa=${selectedSite.site} ^ gff_feature=${selectedSite.gffFeature} ^ lineage_name=${selectedSite.lineage}`
+    if (selectedSite.altAA !== '' && selectedSite.altAA !== null) {
+      q += ' ^ alt_aa=' + selectedSite.altAA;
+    }
+    console.log(q);
+    results.value = await props.serviceFunction(q);
 
     if (results.value.length === 0) {
-      error.value = `No results found for "${siteQuery.value}"`;
+      error.value = `No results found for ${selectedSite.gffFeature}:${selectedSite.site}${selectedSite.altAA} in ${selectedSite.lineage}`;
     }
     
   } catch (err) {
@@ -100,7 +82,7 @@ async function searchSite() {
   }
 }
 
-onMounted(searchSite);
+// onMounted(searchSite);
 </script>
 
 <style scoped>
