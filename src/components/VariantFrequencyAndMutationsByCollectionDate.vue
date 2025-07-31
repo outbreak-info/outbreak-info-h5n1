@@ -7,44 +7,47 @@
   </div>
 
   <div class="row" v-else>
-    <div v-if="variantFrequencyError">
-      {{variantFrequencyError.value}}
+    <div class="col col-md-6">
+      <div v-if="variantFrequencyError">
+        {{variantFrequencyError.value}}
+      </div>
+      <TimeSeriesPointRangeChart
+          v-else
+          :data="variantFrequencyOverTime"
+          :isPreBinned="true"
+          binInterval="month"
+          xLabel="Month"
+          groupBy=""
+          q1Attribute="alt_freq_q1"
+          q3Attribute="alt_freq_q3"
+          medianAttribute="alt_freq_median"
+          tickInterval="6 month"
+          :marginBottom="70"
+          :marginLeft="100"
+          :marginTop="50"
+          :xTickMin="xTicksMinMax[0]"
+          :xTickMax="xTicksMinMax[1]"
+          yLabel="Frequency of host-level variants"
+      />
     </div>
-    <TimeSeriesPointRangeChart
-        v-else
-        :data="variantFrequencyOverTime"
-        :isPreBinned="true"
-        binInterval="month"
-        xLabel="Month"
-        q1Attribute="alt_freq_q1"
-        q3Attribute="alt_freq_q3"
-        medianAttribute="alt_freq_median"
-        tickInterval="6 month"
-        :marginBottom="70"
-        :marginLeft="100"
-        :marginTop="50"
-        :xTickMin="xTicksMinMax[0]"
-        :xTickMax="xTicksMinMax[1]"
-        yLabel="Frequency of host-level variants"
-    />
+    <div class="col col-md-6">
+      <div v-if="mutationCountError">
+        {{mutationCountError.value}}
+      </div>
+      <TimeSeriesBarChart
+          v-else
+          :data="mutationCountOverTime"
+          :height="500"
+          groupKey="group"
+          binInterval="month"
+          :isPreBinned="true"
+          tickInterval="6 months"
+          :marginBottom="70"
+          :marginLeft="100"
+          xLabel="Month"
+      />
+    </div>
   </div>
-  <div class="row">
-    <div v-if="mutationCountError">
-      {{mutationCountError.value}}
-    </div>
-    <TimeSeriesBarChart
-        v-else
-        :data="mutationCountOverTime"
-        :height="500"
-        groupKey="group"
-        binInterval="month"
-        :isPreBinned="true"
-        tickInterval="6 months"
-        :marginBottom="70"
-        :marginLeft="100"
-        xLabel="Time"
-    />
-    </div>
 </template>
 
 <script setup>
@@ -90,7 +93,7 @@ async function loadChart(selectedSite) {
 
     const tmpMutationCountOverTime = await getMutationCountByDateBin(q);
     const tmpVariantFrequencyOverTime = await getVariantFrequencyByCollectionDate(q);
-
+    console.log(tmpVariantFrequencyOverTime);
     if (tmpMutationCountOverTime.length === 0) {
       mutationCountError.value = `No results found for ${selectedSite.gffFeature}:${selectedSite.site}${selectedSite.altAA} in ${selectedSite.lineage}`;
     }

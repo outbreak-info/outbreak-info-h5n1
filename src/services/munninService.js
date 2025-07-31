@@ -500,7 +500,13 @@ export async function getVariantFrequencyByCollectionDate(q = null, date_bin= "m
     let url = `v0/variants:freqByCollectionDate?q=${encodeURIComponent(q)}`
     url += `&date_bin=${encodeURIComponent(date_bin)}`;
     url += `&max_span_days=${encodeURIComponent(max_span_days)}`;
-    return await makeRequest(url);
+    const res = await makeRequest(url);
+    return res.map(
+        obj => ({
+          ...obj,
+          group: obj["gff_feature"] + ":" + obj["ref_aa"] + obj["position_aa"] + obj["alt_aa"]
+        })
+    )
   } catch (error) {
     console.error(`Error fetching phenotype metrics by collection date`, error);
     return [];
