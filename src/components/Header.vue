@@ -2,7 +2,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand no-underline" href="http://localhost:5173/">
+      <a class="navbar-brand no-underline" href="/">
         <img
             src="/assets/favicon.svg"
             width="30"
