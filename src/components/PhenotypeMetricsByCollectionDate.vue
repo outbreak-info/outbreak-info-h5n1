@@ -131,7 +131,7 @@ onMounted(loadData);
 watch(() => props.selectedPhenotypeScore, () => {
   phenotypeMetricValueThreshold.value.phenotype_metric_value = null;
   loadData();
-}, { deep: true });
+});
 
 watch(() => props.selectedHost, () => {
   phenotypeMetricValueThreshold.value.phenotype_metric_value = null;

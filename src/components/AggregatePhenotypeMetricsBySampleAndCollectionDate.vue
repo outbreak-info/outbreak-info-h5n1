@@ -59,7 +59,7 @@ async function getAggregatePhenotypeMetricValuesForDataFieldBySampleAndCollectio
 
 async function loadData() {
   if (isLoading.value) return;
-  
+
   chartData.value = [];
   if (props.selectedPhenotypeScore !== "" && props.selectedPhenotypeScore !== null) {
     let q = "";
@@ -81,7 +81,7 @@ async function loadData() {
 onMounted(loadData);
 watch(() => props.selectedPhenotypeScore, () => {
   loadData();
-}, { deep: true });
+});
 
 watch(() => props.selectedHost, () => {
   loadData();
