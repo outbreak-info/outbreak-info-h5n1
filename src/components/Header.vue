@@ -27,7 +27,7 @@
       </button>
       <div id="navbarNav" class="collapse navbar-collapse">
         <ul class="navbar-nav nav-link">
-          <li class="dropdown px-3 nav-link">
+          <li class="px-3 nav-item">
             <router-link 
               data-toggle="collapse"
               data-target=".navbar-collapse"
@@ -38,7 +38,7 @@
               Mutation Surveillance
             </router-link>
           </li>
-          <li class="dropdown px-3 nav-link">
+          <li class="px-3 nav-item">
             <router-link 
               data-toggle="collapse"
               data-target=".navbar-collapse"
@@ -49,7 +49,7 @@
               Lineage Surveillance
             </router-link>
           </li>
-          <li class="dropdown px-3 nav-link">
+          <li class="px-3 nav-item">
             <router-link 
               data-toggle="collapse"
               data-target=".navbar-collapse"
@@ -60,7 +60,7 @@
               Lineage Comparison
             </router-link>
           </li>
-          <li class="dropdown px-3 nav-link">
+          <li class="px-3 nav-item">
             <router-link 
               data-toggle="collapse"
               data-target=".navbar-collapse"
@@ -71,7 +71,7 @@
               Integrated Surveillance
             </router-link>
           </li>
-          <li class="dropdown px-3 nav-link">
+          <li class="px-3 nav-item">
             <router-link 
               data-toggle="collapse"
               data-target=".navbar-collapse"
@@ -81,7 +81,7 @@
             >
               Search Mutations
             </router-link>
-          </li><li class="dropdown px-3 nav-link">
+          </li><li class="px-3 nav-item">
             <router-link 
               data-toggle="collapse"
               data-target=".navbar-collapse"
