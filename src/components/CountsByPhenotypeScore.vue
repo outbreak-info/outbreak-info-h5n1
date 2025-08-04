@@ -31,8 +31,8 @@
       <scatter-chart
           v-else
           :data="chartData"
-          :xKey="'phenotypeScore'"
-          :yKey="'count'"
+          xKey="phenotypeScore"
+          yKey="count"
           :pointColor="outbreakInfoColorPalette[0]"
           :titleKey="'key'"
           :yLabel="'Number of samples'"
@@ -108,8 +108,8 @@ const selectedPhenotypeScoreObject = ref({
   value: "sa26_usage_increase"
 });
 const selectedPhenotypeScore = computed(() => {
-  if(selectedPhenotypeScoreObject.value.value === null)
-    return null;
+  if(selectedPhenotypeScoreObject.value === null)
+    return null
   return selectedPhenotypeScoreObject.value.value;
 })
 const useLogScale = ref(true);
@@ -196,7 +196,7 @@ async function loadHostAndIsolationSourceData(){
 
 async function loadData() {
   chartData.value = [];
-  if(selectedPhenotypeScore === null || selectedPhenotypeScore.value === null){
+  if(selectedPhenotypeScore.value === null){
     return;
   }
   isLoadingChart.value = true;
