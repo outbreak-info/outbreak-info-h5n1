@@ -327,6 +327,9 @@ export async function getLineageMutationIncidence(lineage, lineage_system_name, 
 }
 
 export async function getVariantMutationLag(lineage, lineage_system_name) {
+  if(lineage === null || lineage_system_name === null) {
+    return [];
+  }
   try {
     const data =  await makeRequest(`variants:mutationLag?lineage=${lineage}&lineage_system_name=${lineage_system_name}`);
 
