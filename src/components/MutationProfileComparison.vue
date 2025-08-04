@@ -4,10 +4,14 @@
     <span v-html="helpText.lineageComparison.mutationProfile"></span>
   </InfoComponent>
 
-  <LineageMultiSelect @lineagesSelectedButtonClick="getAllMutationProfiles" />
+
+  <LineageMultiSelect @lineagesSelectedButtonClick="getAllMutationProfiles" v-model="selectedLineagesObjects" />
 
   <div v-if="isLoading" class="loading">
     <LoadingSpinner />
+  </div>
+  <div v-if="error">
+    {{ error }}
   </div>
   <div class="container-fluid">
     <div class="row">
@@ -43,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import { BarChart, LoadingSpinner, InfoComponent } from 'outbreakInfo';
 import { getLineageMutationProfile } from '../services/munninService.js';
 import LineageMultiSelect from "./LineageMultiSelect.vue";
@@ -51,13 +55,27 @@ import helpText from "../helpInfo/helpInfoText.json";
 
 const chartData = ref([]);
 const isLoading = ref(false);
-
-async function renderCharts() {
-  isLoading.value = true;
-  chartData.value = await getLineageMutationProfile("D1.1", "usda_genoflu");
-  isLoading.value = false;
-  console.log(chartData.value)
-}
+const error = ref(null);
+const selectedLineagesObjects = ref([
+  {
+    label: 'D1.1',
+    value: {
+      lineage_name: "D1.1",
+      lineage_system_name: "usda_genoflu"
+    }
+  }, {
+    label: 'B3.13',
+    value: {
+      lineage_name: "B3.13",
+      lineage_system_name: "usda_genoflu"
+    }
+  }
+])
+const selectedLineages = computed(() => {
+  if(selectedLineagesObjects.value === null)
+    return [];
+  return selectedLineagesObjects.value.map(lineage => lineage.value);
+})
 
 function mergeMutationProfiles(data) {
   const merged = {};
@@ -74,16 +92,24 @@ function mergeMutationProfiles(data) {
   return merged;
 }
 
-async function getAllMutationProfiles(selectedLineages){
+async function getAllMutationProfiles(){
   isLoading.value = true;
-  let res = await Promise.all(selectedLineages.map(lineage => getLineageMutationProfile(lineage.lineage_name, lineage.lineage_system_name)));
-  isLoading.value = false;
-  res = mergeMutationProfiles(res);
-  chartData.value = res;
-  console.log(res);
+  chartData.value = [];
+  try {
+    let res = await Promise.all(selectedLineages.value.map(lineage => getLineageMutationProfile(lineage.lineage_name, lineage.lineage_system_name)));
+    res = mergeMutationProfiles(res);
+    chartData.value = res;
+  } catch (err) {
+    console.error('Error getting mutation profiles:', err);
+    error.value = 'Failed to get mutations profiles. Please try again.';
+  } finally {
+    isLoading.value = false;
+  }
 }
 
-// onMounted(loadData);
+onMounted(() => {
+  getAllMutationProfiles();
+});
 </script>
 
 <style scoped>

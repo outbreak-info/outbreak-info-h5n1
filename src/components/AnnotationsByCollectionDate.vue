@@ -9,7 +9,7 @@
       label="Select an annotation effect. You can filter by host and isolation source using the filters above."
       placeholder="Select annotation effect"
       :showButton="false"
-      v-model="selectedEffectDetail"
+      v-model="selectedEffectDetailObject"
   />
 
   <div class="row">
@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, watch} from 'vue';
+import {ref, onMounted, watch, computed} from 'vue';
 import { MultiSelectComponent, InfoComponent, TimeSeriesBarChart, LoadingSpinner, outbreakInfoColorPalette } from 'outbreakInfo';
 import { getAnnotationsByVariantsAndCollectionDate, getAnnotationsByMutationsAndCollectionDate, getAllAnnotationEffects } from '../services/munninService.js';
 import helpText from "../helpInfo/helpInfoText.json";
@@ -83,8 +83,16 @@ const chartDataCounts = ref([]);
 const allAnnotationEffects = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
-const selectedEffectDetail = ref("Increased virus binding to α2-6");
+const selectedEffectDetailObject = ref({
+  label: "Increased virus binding to α2-6",
+  value: "Increased virus binding to α2-6"
+});
 
+const selectedEffectDetail = computed(() => {
+  if(selectedEffectDetailObject.value === null)
+    return null;
+  return selectedEffectDetailObject.value.value;
+})
 
 const props = defineProps({
   dataField: { type: String, default: "variants" },
@@ -149,7 +157,7 @@ watch(() => props.selectedIsolationSource, () => {
   renderChart();
 }, { deep: true });
 
-watch(() => selectedEffectDetail, () => {
+watch(() => selectedEffectDetailObject, () => {
   renderChart();
 }, { deep: true });
 

@@ -1,24 +1,22 @@
 <template>
   <div class="row">
     <div class="col col-md-6">
-      <LineageMultiSelect :multiple="false" :showButton="false" @update:modelValue="updateSelectedLineage" />
+      <LineageMultiSelect :multiple="false" :showButton="false" v-model="selectedLineageObject" />
     </div>
     <div class="col col-md-6">
-      <GffFeatureMultiSelect @update:modelValue="updateSelectedGffFeature" :serviceFunction="props.serviceFunction"/>
+      <GffFeatureMultiSelect v-model="selectedGffFeatureObject" :serviceFunction="props.serviceFunction"/>
     </div>
     <div class="col col-md-4 mb-4">
       <TextInput
           placeholder="Site"
-          :modelValue="selectedSite"
-          @update:modelValue="selectedSite = $event"
+          v-model="selectedSite"
           :showButton="false"
       />
     </div>
     <div class="col col-md-4 mb-4">
       <TextInput
           placeholder="Alternate amino acid"
-          :modelValue="selectedAltAA"
-          @update:modelValue="selectedAltAA = $event"
+          v-model="selectedAltAA"
           :showButton="false"
       />
     </div>
@@ -31,7 +29,7 @@
 <script setup lang="ts">
 import LineageMultiSelect from "./LineageMultiSelect.vue";
 import { TextInput, ButtonComponent } from 'outbreakInfo';
-import {ref} from "vue";
+import { ref, computed } from "vue";
 import GffFeatureMultiSelect from "./GffFeatureMultiSelect.vue";
 import {getRegionToGffFeatureMappingForVariants} from "../services/munninService";
 
@@ -42,20 +40,30 @@ const props = defineProps({
   },
 });
 
+const selectedLineageObject = ref({
+  label: '',
+  value: null
+});
+const selectedGffFeatureObject = ref({
+  label: '',
+  value: null
+})
+
+const selectedLineage = computed(() => {
+  if (selectedLineageObject.value.value === null)
+    return null;
+  return selectedLineageObject.value.value;
+})
+const selectedGffFeature = computed(() => {
+  if (selectedGffFeatureObject.value.value === null)
+    return null;
+  return selectedGffFeatureObject.value.value;
+})
+
 const selectedAltAA = ref(null);
 const selectedSite = ref(null);
-const selectedLineage = ref(null);
-const selectedGffFeature = ref(null);
+
 const emit = defineEmits(['selectSite']);
-
-// TODO: Pass model value to underlying components and remove updateSelectedLineage and updatedSelectedGffFeature.
-async function updateSelectedLineage(lineage) {
-  selectedLineage.value = lineage;
-}
-
-async function updateSelectedGffFeature(gffFeature) {
-  selectedGffFeature.value = gffFeature;
-}
 
 async function selectSite() {
   emit('selectSite', {

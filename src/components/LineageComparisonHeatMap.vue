@@ -5,12 +5,15 @@
       <span v-html="helpText.lineageComparison.compareMutations"></span>
     </InfoComponent>
 
-    <LineageMultiSelect @lineagesSelectedButtonClick="getAllLineageMutationIncidence" />
+    <LineageMultiSelect @lineagesSelectedButtonClick="getAllLineageMutationIncidence" v-model="selectedLineagesObjects" />
 
     <div v-if="isLoading" class="loading">
       <LoadingSpinner />
     </div>
-    <div class="container-fluid">
+    <div v-else-if="error" class="error">
+      {{ error }}
+    </div>
+    <div v-else class="container-fluid">
       <div class="row">
         <div v-for="(data, gene) in chartData" :key="gene" class="col-xl-6 col-lg-6 col-md-12 mb-6 chart-section">
           <div class="card shadow-sm h-100 border-light bg-transparent">
@@ -44,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import { HeatMapChart, LoadingSpinner, InfoComponent } from 'outbreakInfo';
 import {
   getLineageMutationIncidence,
@@ -56,6 +59,27 @@ import helpText from "../helpInfo/helpInfoText.json";
 const chartData = ref([]);
 const isLoading = ref(false);
 const gffFeatureToRegion = ref({})
+const error = ref(null);
+const selectedLineagesObjects = ref([
+  {
+    label: 'D1.1',
+    value: {
+      lineage_name: "D1.1",
+      lineage_system_name: "usda_genoflu"
+    }
+  }, {
+    label: 'B3.13',
+    value: {
+      lineage_name: "B3.13",
+      lineage_system_name: "usda_genoflu"
+    }
+  }
+])
+const selectedLineages = computed(() => {
+  if(selectedLineagesObjects.value === null)
+    return [];
+  return selectedLineagesObjects.value.map(lineage => lineage.value);
+})
 
 async function loadData() {
   gffFeatureToRegion.value = await getRegionToGffFeatureMappingForMutations();
@@ -73,15 +97,25 @@ function mergeMutationCounts(lineage_mutations) {
   return mutation_counts;
 }
 
-async function getAllLineageMutationIncidence(selectedLineages){
+async function getAllLineageMutationIncidence(){
   isLoading.value = true;
-  let res = await Promise.all(selectedLineages.map(lineage => getLineageMutationIncidence(lineage.lineage_name, lineage.lineage_system_name)));
-  isLoading.value = false;
-  res = mergeMutationCounts(res);
-  chartData.value = res;
+  error.value = null;
+  try {
+    const res = await Promise.all(selectedLineages.value.map(lineage => getLineageMutationIncidence(lineage.lineage_name, lineage.lineage_system_name)));
+    chartData.value = mergeMutationCounts(res);
+  } catch (err) {
+    console.error('Error getting lineage mutation incidence:', err);
+    error.value = err.message || 'Failed to search for mutation. Please try again.';
+  } finally {
+    isLoading.value = false;
+    error.value = null;
+  }
 }
 
-onMounted(loadData);
+onMounted(() => {
+  loadData();
+  getAllLineageMutationIncidence();
+});
 </script>
 
 <style scoped>

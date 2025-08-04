@@ -14,7 +14,7 @@
         <InfoComponent :embedded="true" class="mb-3">
           <span v-html="helpText.mutationSurveillance.phenotype"></span>
         </InfoComponent>
-        <PhenotypicMetricNamesMultiSelect class="inline" v-model="selectedPhenotypeScore" />
+        <PhenotypicMetricNamesMultiSelect class="inline" v-model="selectedPhenotypeScoreObject" />
       </div>
       <div class="col mb-3">
         <CheckBox v-model="useLogScale" text="Log scale" />
@@ -103,7 +103,15 @@ import AggregatePhenotypeMetricsBySampleAndCollectionDate from "./AggregatePheno
 import PhenotypicMetricNamesMultiSelect from "./PhenotypicMetricNamesMultiSelect.vue";
 import helpText from '../helpInfo/helpInfoText.json';
 
-const selectedPhenotypeScore = ref("sa26_usage_increase");
+const selectedPhenotypeScoreObject = ref({
+  label: "Increase in a2,6 sialic acid usage",
+  value: "sa26_usage_increase"
+});
+const selectedPhenotypeScore = computed(() => {
+  if(selectedPhenotypeScoreObject.value.value === null)
+    return null;
+  return selectedPhenotypeScoreObject.value.value;
+})
 const useLogScale = ref(true);
 const chartData = ref([]);
 const isLoadingChart = ref(false);
@@ -187,19 +195,16 @@ async function loadHostAndIsolationSourceData(){
 }
 
 async function loadData() {
-  if(selectedPhenotypeScore.value === '')
+  chartData.value = [];
+  if(selectedPhenotypeScore === null || selectedPhenotypeScore.value === null){
     return;
+  }
   isLoadingChart.value = true;
   error.value = null;
 
   try {
-    // TODO: Get protein ID from API
+    // TODO: Get HA protein ID from API
     chartData.value = await getCountByPhenotypeScoreFilterByHostAndIsolationSource("XAJ25415.1", selectedPhenotypeScore.value, selectedHost.value.key, selectedIsolationSource.value.key, props.dataField);
-
-
-    // if (chartData.value.length === 0) {
-    //   error.value = 'No data found for the selected metric';
-    // }
   } catch (err) {
     console.error('Error loading DMS data:', err);
     error.value = 'Failed to load data. Please try again later.';
@@ -214,7 +219,7 @@ onMounted(() => {
   loadData();
 });
 
-watch(() => selectedPhenotypeScore.value, loadData);
+watch(() => selectedPhenotypeScoreObject.value, loadData);
 watch(() => selectedHost.value, loadData);
 watch(() => selectedIsolationSource.value, loadData);
 </script>
