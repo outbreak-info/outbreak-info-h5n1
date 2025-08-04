@@ -22,11 +22,7 @@ const props = defineProps({
   showButton: { type: Boolean, default: false }
 });
 
-const emit = defineEmits(['update:modelValue']);
-
-async function updateModelValue(selectedLineages) {
-  emit('update:modelValue', selectedLineages);
-}
+const emit = defineEmits(['update:modelValue', 'phenotypeSelectedButtonClick']);
 
 const phenotypes = ref([]);
 
@@ -56,7 +52,13 @@ async function loadData() {
 }
 
 async function phenotypeSelectedButtonClick(phenotypes) {
-  props.modelValue = phenotypes;
+  props.modelValue.value = phenotypes;
+  emit('phenotypeSelectedButtonClick', phenotypes);
+}
+
+async function updateModelValue(phenotypes) {
+  props.modelValue.value = phenotypes;
+  emit('update:modelValue', phenotypes);
 }
 
 onMounted(loadData)

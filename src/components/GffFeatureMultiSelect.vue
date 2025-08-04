@@ -18,7 +18,8 @@ import { getRegionToGffFeatureMappingForVariants } from "../services/munninServi
 const props = defineProps({
   multiple: { type: Boolean, default: false },
   showButton: { type: Boolean, default: false },
-  serviceFunction: { type: Function, default: getRegionToGffFeatureMappingForVariants }
+  serviceFunction: { type: Function, default: getRegionToGffFeatureMappingForVariants },
+  modelValue: { type: Array || String, default: () => [] },
 });
 
 const emit = defineEmits(['gffFeatureSelectedButtonClick', 'update:modelValue']);
@@ -37,11 +38,13 @@ async function loadData() {
 }
 
 async function gffFeatureSelectedButtonClick(selectedGffFeature) {
+  props.modelValue.value = selectedGffFeature;
   emit('gffFeatureSelectedButtonClick', selectedGffFeature);
 }
 
-async function updateModelValue(selectedLineages) {
-  emit('update:modelValue', selectedLineages);
+async function updateModelValue(selectedGffFeature) {
+  props.modelValue.value = selectedGffFeature;
+  emit('update:modelValue', selectedGffFeature);
 }
 
 
