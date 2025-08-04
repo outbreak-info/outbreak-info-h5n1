@@ -1,6 +1,6 @@
 <template>
   <div class="host-view">
-    <h5>Phenotype aggregate by sample</h5>
+    <h5>Phenotype measurement aggregated by sample</h5>
     <InfoComponent :embedded="true">
       <span v-html="helpText.mutationSurveillance.phenotypeAggregateBySample"></span>
     </InfoComponent>

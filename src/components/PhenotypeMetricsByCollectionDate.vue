@@ -46,7 +46,7 @@
           :marginLeft="100"
           :marginTop="40"
           xLabel="Time"
-          yLabel="Count"
+          yLabel="Count of unique mutations"
           :rangeColor="outbreakInfoColorPalette.slice(4,20)"
       />
       </div>
