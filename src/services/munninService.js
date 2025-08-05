@@ -6,6 +6,15 @@ async function makeRequest(endpoint) {
   return await response.json();
 }
 
+export async function getPhenotypeMetrics() {
+  try {
+    return await makeRequest("phenotype_metrics");
+  } catch (error) {
+    console.error(`Error fetching phenotype metrics`, error);
+    return [];
+  }
+}
+
 export async function getSampleCountByField(field = "host", size = null){
   try {
     const data = await makeRequest(`count/samples/by/${field}`);
@@ -35,6 +44,14 @@ export async function getSampleReleaseDate() {
       : Object.entries(data).map(([key, value]) => ({ key, value }));
     
     return formattedData.filter(item => item.key && !isNaN(new Date(item.key)));
+  } catch (error) {
+    return[];
+  }
+}
+
+export async function getSampleCollectionReleaseLag() {
+  try {
+   return await makeRequest("samples:collectionReleaseLag");
   } catch (error) {
     return[];
   }
@@ -198,9 +215,8 @@ async function getCountByDateBin(field="mutations", q = '', group_by = "collecti
     max_span_days: max_span_days.toString()
   });
 
-  if (field !== "lineages") {
+  if (q !== null && q !== '')
     params.append('q', q);
-  }
 
   const endpoint = `v0/${field}:count?${params.toString()}`;
 
@@ -245,8 +261,7 @@ export async function getMutationCountByDateBin(q = '', group_by = "collection_d
 
 export async function getLineageCountByDateBin(q = '', group_by = "collection_date", date_bin = 'month', days = 5, change_bin = 'aa', max_span_days = 30)  {
   try {
-    const res = await getCountByDateBin("lineages",  '', group_by, date_bin, days, change_bin, max_span_days);
-    console.log(res);
+    const res = await getCountByDateBin("lineages",  q, group_by, date_bin, days, change_bin, max_span_days);
 
     let result = {};
     Object.entries(res).forEach(([date, lineage_systems]) => {
@@ -282,13 +297,13 @@ export async function getLineageCountByDateBin(q = '', group_by = "collection_da
   }
 }
 
-export async function getLineageMutationIncidence(lineage, lineage_system_name, change_bin="aa", q = null, min_prevalence=0.75)  {
+export async function getLineageMutationIncidence(lineage, lineage_system_name, min_prevalence=0.75, change_bin="aa", q = null)  {
   if(lineage === null) {
     return [];
   }
   try {
     let url = `v0/lineages:mutationIncidence`;
-    url += `?lineage=${encodeURIComponent(lineage)}&change_bin=${encodeURIComponent(change_bin)}&lineage_system_name=${lineage_system_name}`;
+    url += `?lineage=${encodeURIComponent(lineage)}&change_bin=${encodeURIComponent(change_bin)}&lineage_system_name=${lineage_system_name}&prevalence_threshold=${min_prevalence}`;
     if(q!==null) {
       url += `&q=${q}`;
     }
@@ -312,6 +327,9 @@ export async function getLineageMutationIncidence(lineage, lineage_system_name, 
 }
 
 export async function getVariantMutationLag(lineage, lineage_system_name) {
+  if(lineage === null || lineage_system_name === null) {
+    return [];
+  }
   try {
     const data =  await makeRequest(`variants:mutationLag?lineage=${lineage}&lineage_system_name=${lineage_system_name}`);
 
@@ -360,12 +378,15 @@ export async function getLineageMutationProfile(lineage, lineage_system_name, q 
     if (q !== null)
       url += `?q=${q}`;
     const data = await makeRequest(url);
-    const total_alleles = data.reduce((acc, item) => acc + item.count, 0);
+    const totalAllelesByRegion = data.reduce((acc, { region, count }) => {
+      acc[region] = (acc[region] || 0) + count;
+      return acc;
+    }, {});
     const dataByRegion = data.map(item => ({
       ...item,
       lineage: lineage,
       key: item.ref_nt + "->" + item.alt_nt,
-      value: item.count/total_alleles
+      value: item.count/totalAllelesByRegion[item.region]
     })).reduce((acc, item) => {
       const key = item.region;
       (acc[key] ??= []).push(item);
@@ -449,7 +470,7 @@ async function getAnnotationsByDataFieldAndCollectionDate(dataField, effectDetai
   if(dataField !== "Mutations" && dataField !== "Variants") {
     return [];
   }
-  if(effectDetail === null) {
+  if(effectDetail === null || effectDetail === "") {
     return [];
   }
   try {
@@ -485,17 +506,21 @@ export async function getAllAnnotationEffects() {
   }
 }
 
-export async function getVariantFrequencyByCollectionDate(position_aa = "", alt_aa = "", gff_feature="", q = null, date_bin= "month", max_span_days = 31) {
-  if(position_aa === "" || alt_aa === "" || gff_feature === "") {
+export async function getVariantFrequencyByCollectionDate(q = null, date_bin= "month", max_span_days = 31) {
+  if(q === "") {
     return [];
   }
   try {
-    let url = `v0/variants:freqByCollectionDate?alt_aa=${encodeURIComponent(alt_aa)}&position_aa=${encodeURIComponent(position_aa)}&gff_feature=${encodeURIComponent(gff_feature)}`
+    let url = `v0/variants:freqByCollectionDate?q=${encodeURIComponent(q)}`
     url += `&date_bin=${encodeURIComponent(date_bin)}`;
     url += `&max_span_days=${encodeURIComponent(max_span_days)}`;
-    if(q !== "" && q!== null)
-      url += `&q=${encodeURIComponent(q)}`;
-    return await makeRequest(url);
+    const res = await makeRequest(url);
+    return res.map(
+        obj => ({
+          ...obj,
+          group: obj["gff_feature"] + ":" + obj["ref_aa"] + obj["position_aa"] + obj["alt_aa"]
+        })
+    )
   } catch (error) {
     console.error(`Error fetching phenotype metrics by collection date`, error);
     return [];
@@ -503,12 +528,12 @@ export async function getVariantFrequencyByCollectionDate(position_aa = "", alt_
 }
 
 
-export async function getMutationCountsByCollectionDate(position_aa = "", alt_aa = "", gff_feature="", q = null, date_bin= "month", max_span_days = 31) {
+export async function getMutationCountsByCollectionDateAndLineage(position_aa = "", alt_aa = "", gff_feature="", q = null, date_bin= "month", max_span_days = 31) {
   if(position_aa === "" || alt_aa === "" || gff_feature === "") {
     return [];
   }
   try {
-    let url = `v0/mutations:countByCollectionDate?alt_aa=${encodeURIComponent(alt_aa)}&position_aa=${encodeURIComponent(position_aa)}&gff_feature=${encodeURIComponent(gff_feature)}`
+    let url = `v0/mutations:countByCollectionDateAndLineage?alt_aa=${encodeURIComponent(alt_aa)}&position_aa=${encodeURIComponent(position_aa)}&gff_feature=${encodeURIComponent(gff_feature)}`
     url += `&date_bin=${encodeURIComponent(date_bin)}`;
     url += `&max_span_days=${encodeURIComponent(max_span_days)}`;
     if(q !== "" && q!== null)
@@ -547,9 +572,9 @@ export async function getAggregatePhenotypeMetricValuesForMutationsBySampleAndCo
                                                                                              max_span_days = 31) {
   return await getAggregatePhenotypeMetricValuesForDataFieldBySampleAndCollectionDate("Mutations",
       phenotype_metric_name,
-      q = null,
-      date_bin= "month",
-      max_span_days = 31);
+      q,
+      date_bin,
+      max_span_days);
 }
 
 export async function getAggregatePhenotypeMetricValuesForVariantsBySampleAndCollectionDate(phenotype_metric_name,
@@ -558,7 +583,7 @@ export async function getAggregatePhenotypeMetricValuesForVariantsBySampleAndCol
                                                                                              max_span_days = 31) {
   return await getAggregatePhenotypeMetricValuesForDataFieldBySampleAndCollectionDate("Variants",
       phenotype_metric_name,
-      q = null,
-      date_bin= "month",
-      max_span_days = 31);
+      q,
+      date_bin,
+      max_span_days);
 }

@@ -5,6 +5,7 @@
       label="Select Lineages"
       placeholder="Select lineages"
       :showButton="props.showButton"
+      :modelValue="props.modelValue"
       @buttonClick="lineagesSelectedButtonClick"
       @update:modelValue="updateModelValue"
   />
@@ -17,6 +18,7 @@ import { getLineagesByLineageSystem} from "../services/munninService.js";
 
 const props = defineProps({
   multiple: { type: Boolean, default: true },
+  modelValue: { type: Array || String, default: () => [] },
   showButton: { type: Boolean, default: true }
 });
 
@@ -27,8 +29,10 @@ async function getAllLineages(lineage_system_name){
   const resp = await getLineagesByLineageSystem(lineage_system_name);
   return resp.map(lineage => ({
     label: lineage.lineage_name,
-    value: lineage.lineage_name,
-    ...lineage
+    value: {
+      lineage_name: lineage.lineage_name,
+      lineage_system_name: lineage.lineage_system_name
+    }
   }));
 }
 
@@ -41,7 +45,9 @@ async function lineagesSelectedButtonClick(selectedLineages) {
 }
 
 async function updateModelValue(selectedLineages) {
-  emit('update:modelValue', selectedLineages);
+    // Note: If multiple and showButton is true, then do not create a watch on props.modelValue in the parent component.
+    // In that case, propagate all events through lineagesSelectedButtonClick
+    emit('update:modelValue', selectedLineages);
 }
 
 

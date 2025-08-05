@@ -1,7 +1,10 @@
 <template>
   <div class="row">
-    <div class="col col-md-6">
-      <CountsByDateBin :serviceFunction="getLineageCountByDateBin" title="Detection of lineages over time" :showSearchBar="false"/>
+    <div class="col mb-3">
+      <h5>Lineage counts over time</h5>
+      <InfoComponent :embedded="true">
+        <span v-html="helpText.lineageSurveillance.lineageCountsOverTime"></span>
+      </InfoComponent>
     </div>
   </div>
   <div class="row">
@@ -10,37 +13,19 @@
         <LoadingSpinner />
       </div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-for="(value, key) in transformedData" :key="key">
-        <h4>{{ lineageSystemLabels[key] }}</h4>
-        <hr>
-        <BarChart
-            :data="value"
-            :horizontal="false"
-            :height="500"
-            :marginLeft="180"
-            :marginBottom="100"
-            :barColor="outbreakInfoColorPalette[0]"
-            xLabel="Lineage"
-            yLabel="Count"
-        />
-
-        <div v-if="key in transformedStats">
-          <PointRangeChart
-              :data="transformedStats[key]"
-              :height="500"
-              :marginLeft="180"
-              :marginBottom="100"
-              xAttribute="lineage_name"
-              medianAttribute="abundance_median"
-              q3Attribute="abundance_q3"
-              q1Attribute="abundance_q1"
-              yLabel="Abundance (%)"
-              xLabel="Lineage"
-          />
-        </div>
-      </div>
+      <TimeSeriesBarChart
+          v-else
+          :data="lineageCountsByDateBinResults"
+          :height="500"
+          groupKey="group"
+          binInterval="month"
+          :isPreBinned="true"
+          tickInterval="6 months"
+          :marginBottom="70"
+          :marginLeft="100"
+          xLabel="Time"
+      />
     </div>
-
     <div class="col col-md-3">
       <SelectBarChartWithBarGraph
           :data="hostData"
@@ -62,18 +47,65 @@
           :height="310" />
     </div>
   </div>
+  <div class="row">
+    <div class="col">
+      <h5>Lineage counts</h5>
+      <InfoComponent :embedded="true">
+        <span v-html="helpText.lineageSurveillance.lineageCounts"></span>
+      </InfoComponent>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-md-6">
+      <div v-if="isLoadingChart" class="loading">
+        <LoadingSpinner />
+      </div>
+      <div v-else-if="error" class="error">{{ error }}</div>
+      <TabsWrapper v-else :tabs="Object.keys(transformedData).map(key => ({'name': lineageSystemLabels[key], 'key': key}))" size="large">
+        <template v-for="(value, key) in transformedData" :key="key" v-slot:[key]>
+          <h4>{{ lineageSystemLabels[key] }}</h4>
+          <hr>
+          <BarChart
+              :data="value"
+              :horizontal="false"
+              :height="500"
+              :marginLeft="180"
+              :marginBottom="100"
+              :barColor="outbreakInfoColorPalette[0]"
+              xLabel="Lineage"
+              yLabel="Count"
+          />
+
+          <div v-if="key in transformedStats">
+            <PointRangeChart
+                :data="transformedStats[key]"
+                :height="500"
+                :marginLeft="180"
+                :marginBottom="100"
+                xAttribute="lineage_name"
+                medianAttribute="abundance_median"
+                q3Attribute="abundance_q3"
+                q1Attribute="abundance_q1"
+                yLabel="Abundance (%)"
+                xLabel="Lineage"
+            />
+          </div>
+        </template>
+      </TabsWrapper>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import {ref, onMounted, watch} from 'vue';
-import { BarChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph, PointRangeChart, LoadingSpinner } from 'outbreakInfo';
+import { BarChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph, PointRangeChart, LoadingSpinner, TimeSeriesBarChart, TabsWrapper, InfoComponent } from 'outbreakInfo';
 import {
   getLineageCountByDateBin,
   getLineageCountBySample,
   getLineageSummaryStatsBySample,
   getSampleCountByField
 } from '../services/munninService.js';
-import CountsByDateBin from "./CountsByDateBin.vue";
+import helpText from "../helpInfo/helpInfoText.json";
 
 const transformedData = ref({});
 const transformedStats = ref({});
@@ -85,6 +117,7 @@ const lineageSystemLabels = ref({ //TODO: Store system label in API
   "usda_genoflu": "USDA GenoFLU",
   "freyja_demixed": "Custom Nomenclature"
 });
+const lineageCountsByDateBinResults = ref([]);
 
 const isolationSourceData = ref([]);
 const selectedIsolationSource = ref({key: null, value: null});
@@ -129,7 +162,6 @@ async function getLineageData(){
   let rawData = await getLineageStatsFilterByHostAndIsolationSource(selectedHost.value.key, selectedIsolationSource.value.key);
   rawData = transformData(rawData);
   let rawStatsData = await getLineageStatsFilterByHostAndIsolationSource(selectedHost.value.key, selectedIsolationSource.value.key, true);
-  console.log(rawStatsData);
   rawStatsData = transformSummaryStatsData(rawStatsData);
 
   return [rawData, rawStatsData];
@@ -149,6 +181,18 @@ async function getLineageStatsFilterByHostAndIsolationSource(host, isolationSour
   return getLineageCountBySample(q);
 }
 
+async function getLineageCountByDateBinByHostAndIsolationSource(host, isolationSource) {
+  let q = null;
+  if(host !== null && isolationSource !== null){
+    q = `host=${host} ^ isolation_source=${isolationSource}`;
+  } else if (host !== null) {
+    q = `host=${host}`;
+  } else if(isolationSource !== null){
+    q = `isolation_source=${isolationSource}`;
+  }
+  return getLineageCountByDateBin(q);
+}
+
 async function loadData() {
   isLoadingChart.value = true;
   error.value = null;
@@ -157,6 +201,7 @@ async function loadData() {
     hostData.value = await getSampleCountByField("host");
     isolationSourceData.value = await getSampleCountByField("isolation_source");
     const [data, stats] = await getLineageData();
+    lineageCountsByDateBinResults.value = await getLineageCountByDateBinByHostAndIsolationSource(selectedHost.value.key, selectedIsolationSource.value.key);
     transformedData.value = data;
     transformedStats.value = stats;
 

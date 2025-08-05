@@ -1,33 +1,23 @@
 <template>
-  <h2>{{ title }}</h2>
-  <hr>
+  <div class="row">
+    <div class="col mb-3">
+      <InfoComponent :embedded="true">
+        <span class="d-inline" v-html="((dataField==='variants') ? helpText.mutationSurveillance.hostLevel : helpText.mutationSurveillance.populationLevel) + ' ' + helpText.referenceDetails"></span>
+      </InfoComponent>
+    </div>
+  </div>
+
   <form>
     <div class="row">
-      <div class="col mb-3">
-        <label :for="elementIds.phenotypeField" class="form-label">Phenotype</label>
-<!--        TODO: Import MultiSelectComponent from component library -->
-        <select :id="elementIds.phenotypeField" v-model="selectedPhenotypeScore" class="form-select">
-          <optgroup label="Deep mutational scanning">
-            <option value="stability">Stability</option>
-            <option value="ferret_sera_escape">Ferret sera escape</option>
-            <option value="mouse_sera_escape">Mouse sera escape</option>
-            <option value="sa26_usage_increase">Increase in 2,6 sialic acid receptor usage</option>
-            <option value="entry_in_293t_cells">Entry in 293T cells</option>
-          </optgroup>
-          <optgroup label="Computational prediction">
-            <option value="evescape_sigmoid">EVE</option>
-          </optgroup>
-        </select>
+      <div class="col col-12">
+        <h5>Explore by phenotype</h5>
+        <InfoComponent :embedded="true" class="mb-3">
+          <span v-html="helpText.mutationSurveillance.phenotype"></span>
+        </InfoComponent>
+        <PhenotypicMetricNamesMultiSelect class="inline" v-model="selectedPhenotypeScoreObject" />
       </div>
-
-      <div class="col log-scale-toggle mb-3 d-flex align-items-end">
-        <div class="mb-2 mt-2 form-check">
-<!--        TODO: Import CheckBoxComponent from component library -->
-          <input type="checkbox" v-model="useLogScale" class="form-check-input" :id="elementIds.logScale">
-          <label class="form-check-label" :for="elementIds.logScale">
-            Log scale
-          </label>
-        </div>
+      <div class="col mb-3">
+        <CheckBox v-model="useLogScale" text="Log scale" />
       </div>
     </div>
   </form>
@@ -41,14 +31,17 @@
       <scatter-chart
           v-else
           :data="chartData"
-          :x-key="'phenotypeScore'"
-          :y-key="'count'"
+          xKey="phenotypeScore"
+          yKey="count"
           :pointColor="outbreakInfoColorPalette[0]"
-          :title-key="'key'"
-          :x-label="selectedPhenotypeScore"
-          :y-label="'Number of samples'"
-          :log-scale="useLogScale"
-          :tip-format-string="'Mutation: {key}\nCount: {y}\nDMS: {x}'"
+          :titleKey="'key'"
+          :yLabel="'Number of samples'"
+          :logScale="useLogScale"
+          :tipFormatString="'Mutation: {key}\nCount: {y}\nDMS: {x}'"
+          :showMinMaxXLabels="getAxesAttributes(selectedPhenotypeScore, 'showMinMaxXLabels')"
+          :minXLabel="getAxesAttributes(selectedPhenotypeScore, 'showMinMaxXLabels') ? getAxesAttributes(selectedPhenotypeScore, 'minXLabel') : null"
+          :maxXLabel="getAxesAttributes(selectedPhenotypeScore, 'showMinMaxXLabels') ? getAxesAttributes(selectedPhenotypeScore, 'maxXLabel') : null"
+          :xLabel="!getAxesAttributes(selectedPhenotypeScore, 'showMinMaxXLabels') ? getAxesAttributes(selectedPhenotypeScore, 'xLabel') : null"
       />
     </div>
 
@@ -74,7 +67,7 @@
     </div>
 
   </div>
-  <div class="row">
+  <div class="row mb-5">
     <div class="col col-md-12">
       <PhenotypeMetricsByCollectionDate
           :selectedPhenotypeScore="selectedPhenotypeScore"
@@ -93,35 +86,46 @@
   </div>
   <div class="row mb-5">
     <div class="col col-md-12">
-      <AnnotationsByCollectionDate :dataField="props.dataField" />
+      <AnnotationsByCollectionDate :dataField="props.dataField"
+                                   :selectedHost="selectedHost"
+                                   :selectedIsolationSource="selectedIsolationSource" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch, useId, computed } from 'vue';
-import { ScatterChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph, LoadingSpinner } from 'outbreakInfo';
+import { ScatterChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph, LoadingSpinner, InfoComponent, CheckBox } from 'outbreakInfo';
 import { getSampleCountByField, getCountByPhenotypeScore } from '../services/munninService.js';
 import PhenotypeMetricsByCollectionDate from './PhenotypeMetricsByCollectionDate.vue';
 import AnnotationsByCollectionDate from "./AnnotationsByCollectionDate.vue";
 import AggregatePhenotypeMetricsBySampleAndCollectionDate from "./AggregatePhenotypeMetricsBySampleAndCollectionDate.vue";
+import PhenotypicMetricNamesMultiSelect from "./PhenotypicMetricNamesMultiSelect.vue";
+import helpText from '../helpInfo/helpInfoText.json';
+import { phenotypeMetricAxesLabels, defaultValues } from '../constants/labels.js'
 
-const selectedPhenotypeScore = ref('sa26_usage_increase');
+const selectedPhenotypeScoreObject = ref(defaultValues.phenotypeScore);
+const selectedPhenotypeScore = computed(() => {
+  if(selectedPhenotypeScoreObject.value === null)
+    return null
+  return selectedPhenotypeScoreObject.value.value;
+})
 const useLogScale = ref(true);
 const chartData = ref([]);
 const isLoadingChart = ref(false);
 const error = ref(null);
-const uuid = useId();
 const hostData = ref([]);
 const selectedHost = ref({key: null, value: null});
 
+
+function getAxesAttributes(phenotypeScore, attribute) {
+  if(!(phenotypeScore in phenotypeMetricAxesLabels))
+    return null;
+  return phenotypeMetricAxesLabels[phenotypeScore][attribute];
+}
+
 const isolationSourceData = ref([]);
 const selectedIsolationSource = ref({key: null, value: null});
-
-const elementIds = computed(() => ({
-  phenotypeField: `dmsField-${uuid}`,
-  logScale: `logScale-${uuid}`
-}));
 
 const props = defineProps({
   dataField: { type: String, default: "variants" },
@@ -148,19 +152,29 @@ async function getCountByPhenotypeScoreFilterByHostAndIsolationSource(region, ph
   return getCountByPhenotypeScore(region, phenotypeScore, q, dataField);
 }
 
+async function loadHostAndIsolationSourceData(){
+  isLoadingChart.value = true;
+  try {
+    hostData.value = await getSampleCountByField("host");
+    isolationSourceData.value = await getSampleCountByField("isolation_source");
+  } catch (err) {
+    console.error('Error loading host and isolation source data', err);
+  } finally {
+    isLoadingChart.value = false;
+  }
+}
+
 async function loadData() {
+  chartData.value = [];
+  if(selectedPhenotypeScore.value === null){
+    return;
+  }
   isLoadingChart.value = true;
   error.value = null;
 
   try {
-    // TODO: Get protein ID from API
+    // TODO: Get HA protein ID from API
     chartData.value = await getCountByPhenotypeScoreFilterByHostAndIsolationSource("XAJ25415.1", selectedPhenotypeScore.value, selectedHost.value.key, selectedIsolationSource.value.key, props.dataField);
-    hostData.value = await getSampleCountByField("host");
-    isolationSourceData.value = await getSampleCountByField("isolation_source");
-
-    if (chartData.value.length === 0) {
-      error.value = 'No data found for the selected metric';
-    }
   } catch (err) {
     console.error('Error loading DMS data:', err);
     error.value = 'Failed to load data. Please try again later.';
@@ -170,8 +184,12 @@ async function loadData() {
   }
 }
 
-onMounted(loadData);
-watch(() => selectedPhenotypeScore.value, loadData);
+onMounted(() => {
+  loadHostAndIsolationSourceData();
+  loadData();
+});
+
+watch(() => selectedPhenotypeScoreObject.value, loadData);
 watch(() => selectedHost.value, loadData);
 watch(() => selectedIsolationSource.value, loadData);
 </script>

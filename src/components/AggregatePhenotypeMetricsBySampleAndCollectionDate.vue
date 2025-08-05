@@ -1,6 +1,9 @@
 <template>
   <div class="host-view">
-    <Divider text="Phenotype aggregate by sample" title-placement="left" />
+    <h5>Phenotype measurement aggregated by sample</h5>
+    <InfoComponent :embedded="true">
+      <span v-html="helpText.mutationSurveillance.phenotypeAggregateBySample"></span>
+    </InfoComponent>
     <div v-if="isLoading">
       <LoadingSpinner />
     </div>
@@ -18,7 +21,7 @@
           :marginBottom="70"
           :marginLeft="100"
           :marginTop="50"
-          :yLabel="selectedPhenotypeScore"
+          :yLabel="selectedPhenotypeScoreLabel"
           :width="1200"
           :height="300"
       />
@@ -27,12 +30,14 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from 'vue';
-import { TimeSeriesPointRangeChart, LoadingSpinner, Divider, outbreakInfoColorPalette } from 'outbreakInfo';
+import {computed, onMounted, ref, watch} from 'vue';
+import { TimeSeriesPointRangeChart, LoadingSpinner, InfoComponent, outbreakInfoColorPalette } from 'outbreakInfo';
 import {
   getAggregatePhenotypeMetricValuesForVariantsBySampleAndCollectionDate,
   getAggregatePhenotypeMetricValuesForMutationsBySampleAndCollectionDate,
 } from "../services/munninService.js";
+import helpText from "../helpInfo/helpInfoText.json";
+import {phenotypeMetricLabels} from "../constants/labels.js";
 
 const chartData = ref([])
 const isLoading = ref(false);
@@ -43,6 +48,8 @@ const props = defineProps({
   selectedHost: { type: Object, default: null },
   selectedIsolationSource: { type: Object, default: null }
 })
+
+const selectedPhenotypeScoreLabel = computed(() => phenotypeMetricLabels[props.selectedPhenotypeScore] || props.selectedPhenotypeScore);
 
 async function getAggregatePhenotypeMetricValuesForDataFieldBySampleAndCollectionDate(dataField, phenotypeMetricName, q) {
   if(dataField === "variants") {
@@ -55,9 +62,9 @@ async function getAggregatePhenotypeMetricValuesForDataFieldBySampleAndCollectio
 
 async function loadData() {
   if (isLoading.value) return;
-  
+
   chartData.value = [];
-  if (props.selectedPhenotypeScore !== "") {
+  if (props.selectedPhenotypeScore !== "" && props.selectedPhenotypeScore !== null) {
     let q = "";
     if (props.selectedHost.key !== null && props.selectedIsolationSource.key != null) {
       q = `host=${props.selectedHost.key} ^ isolation_source=${props.selectedIsolationSource.key}`
@@ -77,7 +84,7 @@ async function loadData() {
 onMounted(loadData);
 watch(() => props.selectedPhenotypeScore, () => {
   loadData();
-}, { deep: true });
+});
 
 watch(() => props.selectedHost, () => {
   loadData();

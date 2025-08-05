@@ -1,4 +1,3 @@
-<!-- src/components/NavBar.vue -->
 <template>
   <header id="outbreak-header">
     <nav
@@ -12,7 +11,7 @@
           class="d-inline-block align-top"
           alt="Outbreak.info"
         />
-        outbreak.info
+        outbreak.info H5N1
       </a>
       <button
         class="navbar-toggler"
@@ -72,16 +71,6 @@
             </router-link>
           </li>
           <li class="px-3 nav-item">
-            <router-link 
-              data-toggle="collapse"
-              data-target=".navbar-collapse"
-              class="nav-link"
-              :class="{ active: $route.path === '/search' }"
-              to="/search"
-            >
-              Search Mutations
-            </router-link>
-          </li><li class="px-3 nav-item">
             <router-link 
               data-toggle="collapse"
               data-target=".navbar-collapse"
