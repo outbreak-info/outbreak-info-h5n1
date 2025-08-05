@@ -297,7 +297,7 @@ export async function getLineageCountByDateBin(q = '', group_by = "collection_da
   }
 }
 
-export async function getLineageMutationIncidence(lineage, lineage_system_name, change_bin="aa", q = null, min_prevalence=0.75)  {
+export async function getLineageMutationIncidence(lineage, lineage_system_name, min_prevalence=0.75, change_bin="aa", q = null)  {
   if(lineage === null) {
     return [];
   }

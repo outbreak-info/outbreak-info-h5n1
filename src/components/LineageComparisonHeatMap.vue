@@ -5,7 +5,14 @@
       <span v-html="helpText.lineageComparison.compareMutations"></span>
     </InfoComponent>
 
+    <TextInput
+        label="Select a mutation prevalence threshold (0-1)"
+        placeholder="Select a mutation prevalence threshold (0-1)"
+        v-model="selectedPrevalenceThreshold"
+        :showButton="false"
+    />
     <LineageMultiSelect @lineagesSelectedButtonClick="getAllLineageMutationIncidence" v-model="selectedLineagesObjects" />
+
 
     <div v-if="isLoading" class="loading">
       <LoadingSpinner />
@@ -19,8 +26,9 @@
           <div class="card shadow-sm h-100 border-light bg-transparent">
             <div class="card-header border-light">
               <h4 class="card-title text-end fw-bold text-right mb-0">
-                {{ gene }}
                 <small class="text-muted">{{ gene in gffFeatureToRegion ? "Segment: " + gffFeatureToRegion[gene] : "" }}</small>
+                <br>
+                <span>Protein: <a target="_blank" :href="`https://www.ncbi.nlm.nih.gov/protein/${encodeURIComponent(gene)}`">{{ gene }}</a></span>
               </h4>
             </div>
 
@@ -34,7 +42,7 @@
                   :cellHeight="10"
                   yLabel=""
                   xLabel=""
-                  :domain="[0.75, 1]"
+                  :domain="[selectedPrevalenceThreshold, 1]"
               />
             </div>
           </div>
@@ -47,8 +55,8 @@
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from 'vue';
-import { HeatMapChart, LoadingSpinner, InfoComponent } from 'outbreakInfo';
+import {ref, onMounted, computed } from 'vue';
+import { HeatMapChart, LoadingSpinner, InfoComponent, TextInput } from 'outbreakInfo';
 import {
   getLineageMutationIncidence,
   getRegionToGffFeatureMappingForMutations
@@ -80,6 +88,7 @@ const selectedLineages = computed(() => {
     return [];
   return selectedLineagesObjects.value.map(lineage => lineage.value);
 })
+const selectedPrevalenceThreshold = ref(0.75);
 
 async function loadData() {
   gffFeatureToRegion.value = await getRegionToGffFeatureMappingForMutations();
@@ -97,11 +106,18 @@ function mergeMutationCounts(lineage_mutations) {
   return mutation_counts;
 }
 
+function isValidPrevalenceThreshold(value) {
+  return (typeof value === 'number' && Number.isFinite(value)) && value >= 0 && value <= 1;
+}
+
 async function getAllLineageMutationIncidence(){
+  const selectedPrevalenceThresholdFloat = parseFloat(selectedPrevalenceThreshold.value);
+  if(!isValidPrevalenceThreshold(selectedPrevalenceThresholdFloat))
+    return;
   isLoading.value = true;
   error.value = null;
   try {
-    const res = await Promise.all(selectedLineages.value.map(lineage => getLineageMutationIncidence(lineage.lineage_name, lineage.lineage_system_name)));
+    const res = await Promise.all(selectedLineages.value.map(lineage => getLineageMutationIncidence(lineage.lineage_name, lineage.lineage_system_name, selectedPrevalenceThresholdFloat)));
     chartData.value = mergeMutationCounts(res);
   } catch (err) {
     console.error('Error getting lineage mutation incidence:', err);
