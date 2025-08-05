@@ -12,7 +12,7 @@
       :marginBottom="70"
       :marginLeft="100"
       :marginTop="50"
-      yLabel="Lag between collection date release date"
+      yLabel="Lag between collection date and release date (days)"
       :height="500"
   />
 </template>
