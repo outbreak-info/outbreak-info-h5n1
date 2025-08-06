@@ -1,99 +1,116 @@
-<!-- src/components/NavBar.vue -->
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-      <a class="navbar-brand no-underline" href="/">
+  <header id="outbreak-header">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark w-100 bg-grey__lighter nav-hero"
+    >
+      <a class="navbar-brand no-underline" href="">
         <img
-            src="/assets/favicon.svg"
-            width="30"
-            height="30"
-            class="d-inline-block align-top"
-            alt="Outbreak.info"
+          src="@/assets/icon-01.svg"
+          width="30"
+          height="30"
+          class="d-inline-block align-top"
+          alt="Outbreak.info"
         />
         outbreak.info H5N1
       </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarNav" aria-controls="navbarNav"
-              aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon" />
       </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <router-link class="nav-link" to="/mutation-surveillance"
-                         :class="{ active: $route.path === '/mutation-surveillance' }">
+      <div id="navbarNav" class="collapse navbar-collapse">
+        <ul class="navbar-nav nav-link">
+          <li class="px-3 nav-item">
+            <router-link 
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              class="nav-link"
+              :class="{ active: $route.path === '/mutation-surveillance' }"
+              to="/mutation-surveillance"
+            >
               Mutation Surveillance
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/lineage-surveillance"
-                         :class="{ active: $route.path === '/lineage-surveillance' }">
+          <li class="px-3 nav-item">
+            <router-link 
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              class="nav-link"
+              :class="{ active: $route.path === '/lineage-surveillance' }"
+              to="/lineage-surveillance"
+            >
               Lineage Surveillance
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/lineage-comparison"
-                         :class="{ active: $route.path === '/lineage-comparison' }">
+          <li class="px-3 nav-item">
+            <router-link 
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              class="nav-link"
+              :class="{ active: $route.path === '/lineage-comparison' }"
+              to="/lineage-comparison"
+            >
               Lineage Comparison
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/integrated-surveillance"
-                         :class="{ active: $route.path === '/integrated-surveillance' }">
-              Integrated surveillance
+          <li class="px-3 nav-item">
+            <router-link 
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              class="nav-link"
+              :class="{ active: $route.path === '/integrated-surveillance' }"
+              to="/integrated-surveillance"
+            >
+              Integrated Surveillance
             </router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/metadata"
-                         :class="{ active: $route.path === '/metadata' }">
+          <li class="px-3 nav-item">
+            <router-link 
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              class="nav-link"
+              :class="{ active: $route.path === '/metadata' }"
+              to="/metadata"
+            >
               Metadata
             </router-link>
           </li>
         </ul>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
+  <section
+    id="notices"
+    class="bg-highlight py-2 px-3 text-light text-center fa-sm"
+  >
+  </section>
 </template>
 
 <script setup>
 </script>
 
-<style scoped>
-.navbar {
-  background-color: rgb(44, 62, 80);
-  position: relative;
+<style scoped lang="scss">
+@import '../styles/global.scss';
+
+.navbar-collapse.collapsing {
+  -webkit-transition: height 0s;
+  -moz-transition: height 0s;
+  -ms-transition: height 0s;
+  -o-transition: height 0s;
+  transition: height 0s;
 }
 
-.navbar-brand, .nav-link {
-  position: relative;
-  z-index: 2;
+.dropdown-menu-dark {
+  background: $primary-color;
 }
 
-.navbar::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 40%;
-  height: 100%;
-  background-image: url('../assets/navback-01.svg');
-  background-repeat: no-repeat;
-  background-position: left top; /* Changed to left top */
-  background-size: cover;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.navbar .container,
-.navbar-collapse,
-.navbar-nav {
-  position: relative;
-  z-index: 1;
-}
-
-.navbar-brand {
-  padding-left: 10px; /* Add some padding if needed */
+.dropdown-menu {
+  line-height: 1.2em;
 }
 </style>

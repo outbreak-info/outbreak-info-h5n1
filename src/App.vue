@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <Header />
-    <router-view />
+    <div class="chart-wrapper">
+      <router-view />
+    </div>
     <Footer />
   </div>
 </template>
@@ -13,13 +15,19 @@ import Footer from './components/Footer.vue';
 
 <style>
 #app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
   font-family: 'DM Sans', 'Avenir', 'Helvetica', 'Arial', sans-serif;
   font-weight: 400;
   background-color: #f8f9fa;
   color: #2c3e50;
+}
+
+.chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  text-align: left;
 }
 
 .chart-container svg text {
