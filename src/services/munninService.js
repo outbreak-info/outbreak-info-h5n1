@@ -121,6 +121,19 @@ export async function getCountByPhenotypeScore(region, metric, q = null, field =
   }
 }
 
+export async function getPhenotypeMetricMinAndMax(phenotype_metric_name) {
+  if (phenotype_metric_name === null || phenotype_metric_name === "") {
+    return [null, null];
+  }
+  try {
+    let url = `v0/phenotype_metric_values:getMinAndMaxValues?phenotype_metric_name=${phenotype_metric_name}`;
+    return await makeRequest(url);
+  } catch (error) {
+    console.error(`Error fetching lineages count by lineage system name`, error);
+    return [null, null];
+  }
+}
+
 export async function getLineagesByLineageSystem(lineage_system_name)  {
   try {
     let url = `lineages?lineage_system_name=${lineage_system_name}`;
