@@ -4,6 +4,7 @@
     <span v-html="helpText.mutationSurveillance.literatureAnnotationsOverTime"></span>
   </InfoComponent>
   <MultiSelectComponent
+      class="mb-1"
       :multiple="false"
       :options="allAnnotationEffects"
       label="Select an annotation effect. You can filter by host and isolation source using the filters above."
@@ -14,17 +15,9 @@
 
   <div class="row">
     <div class="col">
-      <span v-if="props.selectedHost.key">
-        <b>Filter by host</b>: {{props.selectedHost.key}}
-      </span>
-      <br>
-      <span v-if="props.selectedIsolationSource.key">
-        <b>Filter by isolation source</b>: {{props.selectedIsolationSource.key}}
-      </span>
-      <br>
-      <span v-if="props.selectedLineage.key">
-        <b>Filter by lineage</b>: {{props.selectedLineage.key}}
-      </span>
+      <TagComponent class="d-inline m-1" v-if="props.selectedHost.key" type="error" :text="'Filter by host: ' + props.selectedHost.key" />
+      <TagComponent class="d-inline m-1" v-if="props.selectedIsolationSource.key" type="error" :text="'Filter by isolation source: ' + props.selectedIsolationSource.key" />
+      <TagComponent class="d-inline m-1" v-if="props.selectedLineage.key" type="error" :text="'Filter by lineage: ' + props.selectedLineage.key" />
     </div>
   </div>
 
@@ -78,7 +71,7 @@
 
 <script setup>
 import {ref, onMounted, watch, computed} from 'vue';
-import { MultiSelectComponent, InfoComponent, TimeSeriesBarChart, LoadingSpinner, outbreakInfoColorPalette } from 'outbreakInfo';
+import { MultiSelectComponent, InfoComponent, TimeSeriesBarChart, LoadingSpinner, outbreakInfoColorPalette, TagComponent } from 'outbreakInfo';
 import {
   getAnnotationsByVariantsAndCollectionDate,
   getAnnotationsByMutationsAndCollectionDate,
