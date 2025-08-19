@@ -102,6 +102,7 @@
 import {ref, onMounted, watch} from 'vue';
 import { BarChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph, PointRangeChart, LoadingSpinner, TimeSeriesBarChart, TabsWrapper, InfoComponent } from 'outbreakInfo';
 import {
+  buildStringQuery,
   getLineageCountByDateBin,
   getLineageCountBySample,
   getLineageSummaryStatsBySample,
@@ -170,28 +171,20 @@ async function getLineageData(){
 }
 
 async function getLineageStatsFilterByHostAndIsolationSource(host, isolationSource, summaryStats = false) {
-  let q = null;
-  if(host !== null && isolationSource !== null){
-    q = `host=${host} ^ isolation_source=${isolationSource}`;
-  } else if (host !== null) {
-    q = `host=${host}`;
-  } else if(isolationSource !== null){
-    q = `isolation_source=${isolationSource}`;
-  }
+  const q = buildStringQuery([
+    { field: "host", value: host },
+    { field: "isolation_source", value: isolationSource }
+  ]);
   if(summaryStats)
     return getLineageSummaryStatsBySample(q);
   return getLineageCountBySample(q);
 }
 
 async function getLineageCountByDateBinByHostAndIsolationSource(host, isolationSource) {
-  let q = null;
-  if(host !== null && isolationSource !== null){
-    q = `host=${host} ^ isolation_source=${isolationSource}`;
-  } else if (host !== null) {
-    q = `host=${host}`;
-  } else if(isolationSource !== null){
-    q = `isolation_source=${isolationSource}`;
-  }
+  let q = buildStringQuery([
+    { field: "host", value: host },
+    { field: "isolation_source", value: isolationSource }
+  ]);
   return getLineageCountByDateBin(q);
 }
 
