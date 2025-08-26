@@ -602,6 +602,33 @@ export async function getAggregatePhenotypeMetricValuesForVariantsBySampleAndCol
       max_span_days);
 }
 
+async function getAnnotationsByDataFieldAndAminoAcidPosition(dataField, effectDetail, q= null) {
+  if(dataField !== "Mutations" && dataField !== "Variants") {
+    return [];
+  }
+  if(effectDetail === null || effectDetail === "") {
+    return [];
+  }
+  try {
+    let url = `v0/annotations:by${dataField}AndAminoAcidPosition`
+    url += `?effect_detail=${encodeURIComponent(effectDetail)}`
+    if(q !== "" && q!== null)
+      url += `&q=${encodeURIComponent(q)}`;
+    return await makeRequest(url);
+  } catch (error) {
+    console.error(`Error fetching annotations metric value by ${dataField} and amino acid position`, error);
+    return [];
+  }
+}
+
+export async function getAnnotationsByMutationsAndAminoAcidPosition(effectDetail, q= null) {
+  return await getAnnotationsByDataFieldAndAminoAcidPosition("Mutations", effectDetail, q);
+}
+
+export async function getAnnotationsByVariantsAndAminoAcidPosition(effectDetail, q= null) {
+  return await getAnnotationsByDataFieldAndAminoAcidPosition("Variants", effectDetail, q);
+}
+
 export function buildStringQuery(fields, sep = " ^ ") {
   const parts = [];
 
