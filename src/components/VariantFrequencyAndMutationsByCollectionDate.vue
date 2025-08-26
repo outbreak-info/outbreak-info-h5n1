@@ -2,7 +2,7 @@
 
   <div class="row">
     <div class="col col-md-6 mt-3">
-      <SelectLineageAndProteinAndAltAA @selectSite="loadChart" :serviceFunction="gffFeatureToRegionMappingFunction" />
+      <SelectLineageAndProteinAndAltAA @selectSite="loadChart" :serviceFunction="getRegionToGffFeatureMappingForMutationsAndVariants" />
     </div>
   </div>
 
@@ -60,8 +60,8 @@ import { ref } from 'vue';
 import { TimeSeriesPointRangeChart, TimeSeriesBarChart, LoadingSpinner } from 'outbreakInfo';
 import {
   getVariantFrequencyByCollectionDate,
-  getRegionToGffFeatureMappingForMutations,
-  getRegionToGffFeatureMappingForVariants, getMutationCountByDateBin
+  getMutationCountByDateBin,
+  getRegionToGffFeatureMappingForMutationsAndVariants
 } from '../services/munninService.js';
 import SelectLineageAndProteinAndAltAA from "./SelectLineageAndProteinAndAltAA.vue";
 
@@ -96,8 +96,7 @@ async function loadChart(selectedSite) {
       q += ' ^ alt_aa=' + selectedSite.altAA;
     }
 
-    const tmpMutationCountOverTime = await getMutationCountByDateBin(q);
-    const tmpVariantFrequencyOverTime = await getVariantFrequencyByCollectionDate(q);
+    const [tmpMutationCountOverTime, tmpVariantFrequencyOverTime] = await Promise.all([getMutationCountByDateBin(q), getVariantFrequencyByCollectionDate(q)]);
     console.log(tmpVariantFrequencyOverTime);
     if (tmpMutationCountOverTime.length === 0) {
       mutationCountError.value = `No results found for ${selectedSite.gffFeature}:${selectedSite.site}${selectedSite.altAA} in ${selectedSite.lineage}`;
@@ -115,17 +114,6 @@ async function loadChart(selectedSite) {
   } finally {
     isLoading.value = false;
   }
-}
-
-async function gffFeatureToRegionMappingFunction(){
-  const regionToGFFMutations = await getRegionToGffFeatureMappingForMutations();
-  const regionToGFFVariants = await getRegionToGffFeatureMappingForVariants();
-  return Object.keys(regionToGFFMutations)
-      .filter(key => key in regionToGFFVariants)
-      .reduce((acc, key) => {
-        acc[key] = regionToGFFMutations[key];
-        return acc;
-      }, {});
 }
 
 // onMounted(loadChart);

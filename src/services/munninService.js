@@ -386,6 +386,16 @@ export async function getRegionToGffFeatureMappingForVariants() {
   return getRegionToGffFeatureMapping('variants');
 }
 
+export async function getRegionToGffFeatureMappingForMutationsAndVariants(){
+  const [regionToGFFMutations, regionToGFFVariants] = await Promise.all([getRegionToGffFeatureMappingForMutations(), getRegionToGffFeatureMappingForVariants()]);
+  return Object.keys(regionToGFFMutations)
+      .filter(key => key in regionToGFFVariants)
+      .reduce((acc, key) => {
+        acc[key] = regionToGFFMutations[key];
+        return acc;
+      }, {});
+}
+
 export async function getLineageMutationProfile(lineage, lineage_system_name, q = null) {
   try {
     let url = `v0/lineages:mutationProfile?lineage=${encodeURIComponent(lineage)}&lineage_system_name=${lineage_system_name}`;

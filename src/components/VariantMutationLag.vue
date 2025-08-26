@@ -43,7 +43,10 @@
 <script setup>
 import {ref, onMounted, watch, computed} from 'vue';
 import { DumbbellChart, LoadingSpinner } from 'outbreakInfo';
-import {getRegionToGffFeatureMappingForMutations, getRegionToGffFeatureMappingForVariants, getVariantMutationLag} from "../services/munninService.js";
+import {
+  getRegionToGffFeatureMappingForMutationsAndVariants,
+  getVariantMutationLag
+} from "../services/munninService.js";
 import LineageMultiSelect from "./LineageMultiSelect.vue";
 
 const chartData = ref([]);
@@ -63,12 +66,6 @@ const selectedLineage = computed(() => {
   return selectedLineageObject.value.value;
 });
 
-async function getGffFeatureToRegionMapping() {
-  let gffFeatureToRegionMutations = await getRegionToGffFeatureMappingForMutations();
-  let gffFeatureToRegionVariants = await getRegionToGffFeatureMappingForVariants();
-  return { ...gffFeatureToRegionMutations, ...gffFeatureToRegionVariants };
-}
-
 async function renderCharts() {
   if(selectedLineage.value === null) {
     chartData.value = [];
@@ -86,7 +83,7 @@ async function renderCharts() {
 }
 
 async function loadData() {
-  gffFeatureToRegion.value = await getGffFeatureToRegionMapping();
+  gffFeatureToRegion.value = await getRegionToGffFeatureMappingForMutationsAndVariants();
 }
 
 onMounted(() => {
