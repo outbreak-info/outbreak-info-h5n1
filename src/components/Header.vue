@@ -78,7 +78,7 @@
               :class="{ active: $route.path === '/integrated-surveillance' }"
               to="/integrated-surveillance"
             >
-              Integrated Surveillance
+              Multi-scale Surveillance
             </router-link>
           </li>
           <li class="px-3 nav-item">

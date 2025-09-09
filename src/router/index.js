@@ -38,7 +38,7 @@ const routes = [
     },
     {
         path: '/integrated-surveillance',
-        name: 'Integrated surveillance',
+        name: 'Multi-scale surveillance',
         component: VariantMutationSurveillanceView
     },
 ]
