@@ -7,7 +7,8 @@ export const phenotypeMetricLabels = {
     "stability": "HA stability",
     "ferret_sera_escape": "Neutralization escape cause for ferret sera",
     "evescape_sigmoid": "EVE",
-    "entry_in_sa26_and_sa23_293t_cells": "Entry in a2,6 and 2,3 sialic acid 293T cells"
+    "entry_in_sa26_and_sa23_293t_cells": "Entry in a2,6 and 2,3 sialic acid 293T cells",
+    "mutdiffsel": "PB2 Mutational differential selection"
 }
 
 export const phenotypeMetricAxesLabels = {
@@ -39,6 +40,10 @@ export const phenotypeMetricAxesLabels = {
     "evescape_sigmoid": {
         showMinMaxXLabels: false,
         xLabel: "Increase in predicted fitness"
+    },
+    "mutdiffsel": {
+        showMinMaxXLabels: false,
+        xLabel: "PB2 Mutational differential selection"
     }
 }
 
