@@ -148,10 +148,13 @@ const getRegionForSegment = (segmentName) => {
 }
 
 const currentRegion = computed(() => {
-  if (selectedPhenotypeScore.value === 'mutdiffsel') {
-    return getRegionForSegment('PB2');
-  }
-  return getRegionForSegment('HA');
+  const region = selectedPhenotypeScore.value === 'mutdiffsel'
+        ? getRegionForSegment('PB2')
+        : getRegionForSegment('HA');
+    if (!region && !error.value) {
+      error.value = 'Unable to determine genomic region for the selected phenotype metric.';
+    }
+    return region;
 });
 
 const hostBarSelected = (item) => {
@@ -192,7 +195,7 @@ async function loadHostAndIsolationSourceData(){
 
 async function loadData() {
   chartData.value = [];
-  if(selectedPhenotypeScore.value === null){
+  if(selectedPhenotypeScore.value === null || !currentRegion.value){
     return;
   }
   isLoadingChart.value = true;
@@ -219,6 +222,7 @@ async function loadRegionMapping() {
       : await getRegionToGffFeatureMappingForVariants();
   } catch (err) {
     console.error('Error loading region mapping:', err);
+    error.value = 'Failed to load region mapping. Data cannot be loaded at this time.';
   }
 }
 
