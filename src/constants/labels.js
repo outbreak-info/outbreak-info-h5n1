@@ -1,13 +1,14 @@
 // TODO: Generalize the storage of these labels
 export const phenotypeMetricLabels = {
-    "sa26_usage_increase_new": "Increase in a2,6 sialic acid usage",
-    "entry_in_293t_cells": "Entry in 293T cells",
+    "sa26_usage_increase_new": "HA: Increase in a2,6 sialic acid usage",
+    "entry_in_293t_cells": "HA: Entry in 293T cells",
     // "sa26_usage_increase": "Increase in a2,6 sialic acid usage",
-    "mouse_sera_escape": "Neutralization escape cause for mouse sera",
-    "stability": "HA stability",
-    "ferret_sera_escape": "Neutralization escape cause for ferret sera",
-    "evescape_sigmoid": "EVE",
-    "entry_in_sa26_and_sa23_293t_cells": "Entry in a2,6 and 2,3 sialic acid 293T cells"
+    "mouse_sera_escape": "HA: Neutralization escape cause for mouse sera",
+    "stability": "HA: stability",
+    "ferret_sera_escape": "HA: Neutralization escape cause for ferret sera",
+    "evescape_sigmoid": "HA: EVE",
+    "entry_in_sa26_and_sa23_293t_cells": "HA: Entry in a2,6 and 2,3 sialic acid 293T cells",
+    "mutdiffsel": "PB2: Mutational differential selection"
 }
 
 export const phenotypeMetricAxesLabels = {
@@ -39,6 +40,10 @@ export const phenotypeMetricAxesLabels = {
     "evescape_sigmoid": {
         showMinMaxXLabels: false,
         xLabel: "Increase in predicted fitness"
+    },
+    "mutdiffsel": {
+        showMinMaxXLabels: false,
+        xLabel: "PB2 Mutational differential selection"
     }
 }
 

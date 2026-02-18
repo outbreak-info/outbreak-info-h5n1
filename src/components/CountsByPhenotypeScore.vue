@@ -37,8 +37,8 @@
           :titleKey="'key'"
           :yLabel="'Number of samples'"
           :logScale="useLogScale"
-          :additionalAnnotationKeys="['h3Site']"
-          :tipFormatString="'Mutation: {key}\nH3 site number: {additional0}\nCount: {y}\nDMS: {x}'"
+          :additionalAnnotationKeys="selectedPhenotypeScore === 'mutdiffsel' ? [] : ['h3Site']"
+          :tipFormatString="selectedPhenotypeScore === 'mutdiffsel' ? 'Mutation: {key}\nCount: {y}\nDMS: {x}' : 'Mutation: {key}\nH3 site number: {additional0}\nCount: {y}\nDMS: {x}'"
           :showMinMaxXLabels="getAxesAttributes(selectedPhenotypeScore, 'showMinMaxXLabels')"
           :minXLabel="getAxesAttributes(selectedPhenotypeScore, 'showMinMaxXLabels') ? getAxesAttributes(selectedPhenotypeScore, 'minXLabel') : null"
           :maxXLabel="getAxesAttributes(selectedPhenotypeScore, 'showMinMaxXLabels') ? getAxesAttributes(selectedPhenotypeScore, 'maxXLabel') : null"
@@ -92,12 +92,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, useId, computed } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { ScatterChart, outbreakInfoColorPalette, SelectBarChartWithBarGraph, LoadingSpinner, InfoComponent, CheckBox } from 'outbreakInfo';
 import {
   getSampleCountByField,
   getCountByPhenotypeScore,
-  getPhenotypeMetricMinAndMax, buildStringQuery
+  getPhenotypeMetricMinAndMax,
+  buildStringQuery,
+  getRegionToGffFeatureMappingForMutations,
+  getRegionToGffFeatureMappingForVariants,
 } from '../services/munninService.js';
 import PhenotypeMetricsByCollectionDate from './PhenotypeMetricsByCollectionDate.vue';
 import AggregatePhenotypeMetricsBySampleAndCollectionDate from "./AggregatePhenotypeMetricsBySampleAndCollectionDate.vue";
@@ -130,11 +133,29 @@ function getAxesAttributes(phenotypeScore, attribute) {
 
 const isolationSourceData = ref([]);
 const selectedIsolationSource = ref({key: null, value: null});
+const regionMapping = ref({});
 
 const props = defineProps({
   dataField: { type: String, default: "variants" },
   title: { type: String, default: "Host-level" }
 })
+
+// Looks up the protein accession for a given segment name (e.g. "HA", "PB2")
+// from the region mapping returned by the API.
+const getRegionForSegment = (segmentName) => {
+  const entry = Object.entries(regionMapping.value).find(([, v]) => v === segmentName);
+  return entry ? entry[0] : null;
+}
+
+const currentRegion = computed(() => {
+  const region = selectedPhenotypeScore.value === 'mutdiffsel'
+        ? getRegionForSegment('PB2')
+        : getRegionForSegment('HA');
+    if (!region && !error.value) {
+      error.value = 'Unable to determine genomic region for the selected phenotype metric.';
+    }
+    return region;
+});
 
 const hostBarSelected = (item) => {
   selectedHost.value = item;
@@ -151,7 +172,9 @@ async function getCountByPhenotypeScoreFilterByHostAndIsolationSource(region, ph
   ]);
   const res = await getCountByPhenotypeScore(region, phenotypeScore, q, dataField);
   return res.map(item => ({
-    h3Site: convertSiteHANumbering(item.position_aa, "sequential_site", "reference_site"),
+    h3Site: phenotypeScore !== 'mutdiffsel'
+      ? convertSiteHANumbering(item.position_aa, "sequential_site", "reference_site")
+      : null,
     ...item
   }))
 }
@@ -172,16 +195,15 @@ async function loadHostAndIsolationSourceData(){
 
 async function loadData() {
   chartData.value = [];
-  if(selectedPhenotypeScore.value === null){
+  if(selectedPhenotypeScore.value === null || !currentRegion.value){
     return;
   }
   isLoadingChart.value = true;
   error.value = null;
 
   try {
-    // TODO: Get HA protein ID from API
     [chartData.value, phenotypeMetricMinAndMax.value] = await Promise.all([
-      getCountByPhenotypeScoreFilterByHostAndIsolationSource("XAJ25415.1", selectedPhenotypeScore.value, selectedHost.value.key, selectedIsolationSource.value.key, props.dataField),
+      getCountByPhenotypeScoreFilterByHostAndIsolationSource(currentRegion.value, selectedPhenotypeScore.value, selectedHost.value.key, selectedIsolationSource.value.key, props.dataField),
       getPhenotypeMetricMinAndMax(selectedPhenotypeScore.value)
     ]);
   } catch (err) {
@@ -193,7 +215,19 @@ async function loadData() {
   }
 }
 
-onMounted(() => {
+async function loadRegionMapping() {
+  try {
+    regionMapping.value = props.dataField === 'mutations'
+      ? await getRegionToGffFeatureMappingForMutations()
+      : await getRegionToGffFeatureMappingForVariants();
+  } catch (err) {
+    console.error('Error loading region mapping:', err);
+    error.value = 'Failed to load region mapping. Data cannot be loaded at this time.';
+  }
+}
+
+onMounted(async () => {
+  await loadRegionMapping();
   loadHostAndIsolationSourceData();
   loadData();
 });
