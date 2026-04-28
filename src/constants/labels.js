@@ -8,6 +8,9 @@ export const phenotypeMetricLabels = {
     "ferret_sera_escape": "HA: Neutralization escape cause for ferret sera",
     "evescape_sigmoid": "HA: EVE",
     "entry_in_sa26_and_sa23_293t_cells": "HA: Entry in a2,6 and 2,3 sialic acid 293T cells",
+    "entry_in_neuac": "HA: Entry in NeuAc 293T cells",
+    "entry_in_neugc": "HA: Entry in NeuGc 293T cells",
+    "neugc_usage_increase": "HA: Increase in NeuGc receptor usage",
     "mutdiffsel": "PB2: Mutational differential selection"
 }
 
@@ -40,6 +43,18 @@ export const phenotypeMetricAxesLabels = {
     "evescape_sigmoid": {
         showMinMaxXLabels: false,
         xLabel: "Increase in predicted fitness"
+    },
+    "entry_in_neuac": {
+        showMinMaxXLabels: false,
+        xLabel: "Entry in NeuAc 293T cells"
+    },
+    "entry_in_neugc": {
+        showMinMaxXLabels: false,
+        xLabel: "Entry in NeuGc 293T cells"
+    },
+    "neugc_usage_increase": {
+        showMinMaxXLabels: false,
+        xLabel: "Increase in NeuGc receptor usage"
     },
     "mutdiffsel": {
         showMinMaxXLabels: false,
