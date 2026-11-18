@@ -1,11 +1,12 @@
 {
-  "retrieved_at": "2026-11-17T19:40:09Z",
+  "retrieved_at": "2026-11-18T18:30:56Z",
   "sources": [
     {"type": "cdc", "name": "CDC: A(H5) Bird Flu Surveillance and Human Monitoring", "url": "https://www.cdc.gov/bird-flu/h5-monitoring/index.html"},
     {"type": "unconfirmed", "name": "United Farm Workers (verified on Bluesky): H5 outbreak among Yakima Valley dairy workers (Nov 11, 2026)", "url": "https://bsky.app/profile/ufw.bsky.social/post/3mzyszeru4s2c"},
     {"type": "usda", "name": "USDA APHIS: HPAI confirmed cases in livestock", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/hpai-confirmed-cases-livestock"},
     {"type": "usda", "name": "USDA APHIS: confirmed HPAI in commercial and backyard flocks", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/commercial-backyard-flocks"},
-    {"type": "unconfirmed", "name": "WBOC: Preliminary tests detect bird flu at Worcester County poultry farm (Nov 11, 2026)", "url": "https://www.wboc.com/news/preliminary-tests-detect-bird-flu-at-worcester-county-poultry-farm/article_73c39cd9-7a87-4383-8a6f-19718259d423.html"}
+    {"type": "other", "name": "Washington State Department of Agriculture: Bird Flu (Pierce County backyard flock confirmed Nov 17, 2026)", "url": "https://agr.wa.gov/departments/animals-livestock-and-pets/avian-health/avian-influenza/bird-flu"},
+    {"type": "unconfirmed", "name": "CNBC (Reuters): Cal-Maine to cull 1.8 million birds, halt production at Florida facility after bird flu detected (Nov 18, 2026)", "url": "https://www.cnbc.com/2026/11/18/cal-maine-to-cull-1point8-million-birds-halt-production-at-florida-facility-after-bird-flu-detected-.html"}
   ],
   "humans": [
     ["2024-03", "Texas", 1, 0],
@@ -864,16 +865,18 @@
     ["2026-10", "Wisconsin", 3, 3],
     ["2026-10", "Wyoming", 1, 3],
     ["2026-11", "California", 3, 3],
+    ["2026-11", "Florida", 1, 5],
     ["2026-11", "Idaho", 1, 3],
     ["2026-11", "Kansas", 1, 3],
-    ["2026-11", "Maryland", 1, 4],
-    ["2026-11", "Montana", 1, 3],
+    ["2026-11", "Maryland", 1, 3],
+    ["2026-11", "Montana", 2, 3],
     ["2026-11", "Ohio", 1, 3],
     ["2026-11", "Oregon", 1, 3],
     ["2026-11", "South Dakota", 1, 3],
     ["2026-11", "Texas", 1, 3],
     ["2026-11", "Utah", 1, 3],
     ["2026-11", "Washington", 1, 3],
+    ["2026-11", "Washington", 1, 4],
     ["2026-11", "Wisconsin", 1, 3]
   ]
 }
