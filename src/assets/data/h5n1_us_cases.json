@@ -1,10 +1,11 @@
 {
-  "retrieved_at": "2026-11-19T18:14:55Z",
+  "retrieved_at": "2026-11-20T00:24:18Z",
   "sources": [
     {"type": "cdc", "name": "CDC: A(H5) Bird Flu Surveillance and Human Monitoring", "url": "https://www.cdc.gov/bird-flu/h5-monitoring/index.html"},
     {"type": "unconfirmed", "name": "United Farm Workers (verified on Bluesky): H5 outbreak among Yakima Valley dairy workers (Nov 11, 2026)", "url": "https://bsky.app/profile/ufw.bsky.social/post/3mzyszeru4s2c"},
     {"type": "usda", "name": "USDA APHIS: HPAI confirmed cases in livestock", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/hpai-confirmed-cases-livestock"},
-    {"type": "usda", "name": "USDA APHIS: confirmed HPAI in commercial and backyard flocks", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/commercial-backyard-flocks"}
+    {"type": "usda", "name": "USDA APHIS: confirmed HPAI in commercial and backyard flocks", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/commercial-backyard-flocks"},
+    {"type": "other", "name": "East Oregonian: State's first human case of bird flu confirmed in Morrow County (Nov 19, 2026)", "url": "https://eastoregonian.com/2026/11/19/states-first-human-case-of-bird-flu-confirmed-in-morrow-county/"}
   ],
   "humans": [
     ["2024-03", "Texas", 1, 0],
@@ -27,6 +28,7 @@
     ["2025-02", "Wyoming", 1, 0],
     ["2025-10", "Washington", 1, 0],
     ["2026-10", "Washington", 3, 0],
+    ["2026-11", "Oregon", 1, 4],
     ["2026-11", "Washington", 1, 1]
   ],
   "cattle": [
