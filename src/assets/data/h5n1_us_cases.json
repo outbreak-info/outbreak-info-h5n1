@@ -1,11 +1,11 @@
 {
-  "retrieved_at": "2026-11-21T00:12:10Z",
+  "retrieved_at": "2026-11-21T06:21:52Z",
   "sources": [
     {"type": "cdc", "name": "CDC: A(H5) Bird Flu Surveillance and Human Monitoring", "url": "https://www.cdc.gov/bird-flu/h5-monitoring/index.html"},
-    {"type": "cdc", "name": "CDC: A(H5) Bird Flu: Current Situation (updated Nov 20, 2026)", "url": "https://www.cdc.gov/bird-flu/situation-summary/index.html"},
+    {"type": "cdc", "name": "CDC: Weekly US Influenza Surveillance Report: Key Updates for Week 45, ending November 14, 2026", "url": "https://www.cdc.gov/fluview/surveillance/2026-week-45.html"},
     {"type": "usda", "name": "USDA APHIS: HPAI confirmed cases in livestock", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/hpai-confirmed-cases-livestock"},
     {"type": "usda", "name": "USDA APHIS: confirmed HPAI in commercial and backyard flocks", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/commercial-backyard-flocks"},
-    {"type": "unconfirmed", "name": "United Farm Workers (verified on Bluesky): Yakima Valley dairy workers sick with avian flu symptoms but not tested (Nov 10, 2026)", "url": "https://bsky.app/profile/ufw.bsky.social/post/3mzyszeru4s2c"},
+    {"type": "unconfirmed", "name": "United Farm Workers: Yakima Valley dairy workers sick with avian flu symptoms but not tested (Nov 10, 2026)", "url": "https://bsky.app/profile/ufw.bsky.social/post/3mzyszeru4s2c"},
     {"type": "unconfirmed", "name": "Delaware Department of Agriculture: Delaware announces presumptive positive avian influenza case in Sussex County commercial flock (Nov 20, 2026)", "url": "https://news.delaware.gov/2026/11/20/delaware-announces-presumptive-positive-avian-influenza-case-in-sussex-county-commercial-flock/"}
   ],
   "humans": [
