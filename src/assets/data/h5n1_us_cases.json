@@ -1,11 +1,12 @@
 {
-  "retrieved_at": "2026-11-20T00:24:18Z",
+  "retrieved_at": "2026-11-21T00:12:10Z",
   "sources": [
     {"type": "cdc", "name": "CDC: A(H5) Bird Flu Surveillance and Human Monitoring", "url": "https://www.cdc.gov/bird-flu/h5-monitoring/index.html"},
-    {"type": "unconfirmed", "name": "United Farm Workers (verified on Bluesky): H5 outbreak among Yakima Valley dairy workers (Nov 11, 2026)", "url": "https://bsky.app/profile/ufw.bsky.social/post/3mzyszeru4s2c"},
+    {"type": "cdc", "name": "CDC: A(H5) Bird Flu: Current Situation (updated Nov 20, 2026)", "url": "https://www.cdc.gov/bird-flu/situation-summary/index.html"},
     {"type": "usda", "name": "USDA APHIS: HPAI confirmed cases in livestock", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/hpai-confirmed-cases-livestock"},
     {"type": "usda", "name": "USDA APHIS: confirmed HPAI in commercial and backyard flocks", "url": "https://www.aphis.usda.gov/livestock-poultry-disease/avian/avian-influenza/hpai-detections/commercial-backyard-flocks"},
-    {"type": "other", "name": "East Oregonian: State's first human case of bird flu confirmed in Morrow County (Nov 19, 2026)", "url": "https://eastoregonian.com/2026/11/19/states-first-human-case-of-bird-flu-confirmed-in-morrow-county/"}
+    {"type": "unconfirmed", "name": "United Farm Workers (verified on Bluesky): Yakima Valley dairy workers sick with avian flu symptoms but not tested (Nov 10, 2026)", "url": "https://bsky.app/profile/ufw.bsky.social/post/3mzyszeru4s2c"},
+    {"type": "unconfirmed", "name": "Delaware Department of Agriculture: Delaware announces presumptive positive avian influenza case in Sussex County commercial flock (Nov 20, 2026)", "url": "https://news.delaware.gov/2026/11/20/delaware-announces-presumptive-positive-avian-influenza-case-in-sussex-county-commercial-flock/"}
   ],
   "humans": [
     ["2024-03", "Texas", 1, 0],
@@ -28,8 +29,8 @@
     ["2025-02", "Wyoming", 1, 0],
     ["2025-10", "Washington", 1, 0],
     ["2026-10", "Washington", 3, 0],
-    ["2026-11", "Oregon", 1, 4],
-    ["2026-11", "Washington", 1, 1]
+    ["2026-11", "Oregon", 1, 1],
+    ["2026-11", "Washington", 1, 4]
   ],
   "cattle": [
     ["2024-03", "Kansas", 2, 2],
@@ -865,6 +866,7 @@
     ["2026-10", "Wisconsin", 3, 3],
     ["2026-10", "Wyoming", 1, 3],
     ["2026-11", "California", 5, 3],
+    ["2026-11", "Delaware", 1, 5],
     ["2026-11", "Florida", 1, 3],
     ["2026-11", "Idaho", 1, 3],
     ["2026-11", "Kansas", 1, 3],
