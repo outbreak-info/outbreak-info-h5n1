@@ -12,12 +12,13 @@ env:
   LABEL: h5n1-data-update # marks the pull requests this workflow opens
 
 jobs:
-  # Skip the update while a pull request from this workflow is still open
+  # Skip the update while a pull request from this workflow is open and under a week old; close older ones so a fresh one replaces them
   check:
     if: github.repository == 'outbreak-info/outbreak-info-h5n1'
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: read
+      contents: write # to delete the closed pull request's branch
+      pull-requests: write
     outputs:
       open-pr: ${{ steps.pr.outputs.number }}
     steps:
@@ -25,9 +26,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          pr=$(gh pr list --repo "$GITHUB_REPOSITORY" --label "$LABEL" --json number --jq '.[0].number // empty')
-          echo "number=$pr" >> "$GITHUB_OUTPUT"
-          if [ -n "$pr" ]; then echo "::notice::#$pr is still open, so skipping this run"; fi
+          set -o pipefail # a failed lookup must not look like "no open pull request"
+          gh pr list --repo "$GITHUB_REPOSITORY" --label "$LABEL" --json number,createdAt \
+            --jq '.[] | "\(.number) \(now - (.createdAt | fromdateiso8601) >= 7*24*3600)"' |
+          while read -r pr stale; do
+            if [ "$stale" = true ]; then
+              gh pr close "$pr" --repo "$GITHUB_REPOSITORY" --delete-branch --comment "Closing because this is over a week old; a newer update replaces it."
+            else
+              echo "number=$pr" >> "$GITHUB_OUTPUT"
+              echo "::notice::#$pr is still open, so skipping this run"
+            fi
+          done
 
   update:
     needs: check
